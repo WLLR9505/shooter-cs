@@ -28,4 +28,6 @@ function canvasApp () {
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 300);
+
+    drawArma(CONTEXT);
 }
