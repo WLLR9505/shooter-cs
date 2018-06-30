@@ -28,3 +28,15 @@ function drawFPS (THECANVAS, CONTEXT) {
     CONTEXT.textBaseline = 'top';
     CONTEXT.fillText(contadorFPS.lastFrameCount + 'FPS', 5, 5);
 }
+
+function drawMousePosition (CONTEXT, mouseX, mouseY) {
+    CONTEXT.fillStyle = '#ffffff';
+    CONTEXT.font = '14px consolas';
+    CONTEXT.textBaseline = 'top';
+    CONTEXT.fillText('x ' + mouseX + '  y ' + mouseY, 5, 20);
+}
+
+function devInfo (THECANVAS, CONTEXT, mouseX, mouseY) {
+    drawFPS(THECANVAS, CONTEXT);
+    drawMousePosition(CONTEXT, mouseX, mouseY);
+}
