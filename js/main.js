@@ -1,5 +1,3 @@
-const THECANVAS = document.getElementById('canvas');
-const CONTEXT = THECANVAS.getContext('2d');
 const FPS = 30;
 const ARMA_TESTE = fuzil1;
 var intervalTime = 1000 / FPS;
@@ -29,10 +27,22 @@ function canvasApp () {
     gameLoop();
 }
 
+var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], 'char_militar1_sheet.png', {
+    width: 210,
+    height: 63,
+    image: MILITAR_SHEET,
+    context: CONTEXT,
+    TporQuadro: 6,
+    nQuadros: 5,
+    loop: true
+});
+
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
-    CONTEXT.fillRect(0, 0, 600, 300);
+    CONTEXT.fillRect(0, 0, 600, 200);
 
+    militar.spawn(100, 100);
+    militar.andar(100, 100);
     drawArma(ARMA_TESTE ,CONTEXT, [ mouseX, mouseY ]);
     updateTiro(tirosNoAr, CONTEXT);
 }

@@ -8,9 +8,17 @@
     </head>
     <body>
         <div id="canvasDiv" style="position: absolute">
-            <canvas id="canvas" width="600" height="300"></canvas>
+            <canvas id="canvas" width="600" height="200"></canvas>
         </div>
-        <script src="js/armas.js"></script> 
+
+        <script type="text/javascript">
+            const THECANVAS = document.getElementById('canvas');
+            const CONTEXT = THECANVAS.getContext('2d');
+        </script>
+
+        <script src="js/Engine.js"></script>
+        <script src="js/personagens.js"></script>
+        <script src="js/armas.js"></script>
         <script src="js/devTools.js"></script>
         <script src="js/main.js"></script>
     </body>
