@@ -62,13 +62,13 @@ var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], 'char_militar1_shee
     TporQuadro: 6,
     nQuadros: 14,
     loop: true
-});
+}, [100, 100]);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 200);
 
-    militar.spawn(100, 100);
+    militar.update();
     drawArma(ARMA_TESTE ,CONTEXT, [ mouseX, mouseY ]);
     updateTiro(tirosNoAr, CONTEXT);
 }
