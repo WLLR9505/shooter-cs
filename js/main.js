@@ -25,16 +25,16 @@ document.onkeyup = function (e) {
 
 function checkKeys () {
     if (keyPressList[65]) { //A
-        militar.andar(100, 100);
+        militar.andar(100, 100, 'e');
     }
     if (keyPressList[68]) { //D
-        militar.andar(100, 100);
+        militar.andar(100, 100, 'd');
     }
     if (keyPressList[83]) { //S
-        militar.andar(100, 100);
+        militar.andar(100, 100, 'b');
     }
     if (keyPressList[87]) { //W
-        militar.andar(100, 100);
+        militar.andar(100, 100, 'c');
     }
 }
 
@@ -55,12 +55,12 @@ function canvasApp () {
 }
 
 var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], 'char_militar1_sheet.png', {
-    width: 210,
+    width: 588,
     height: 63,
     image: MILITAR_SHEET,
     context: CONTEXT,
     TporQuadro: 6,
-    nQuadros: 5,
+    nQuadros: 14,
     loop: true
 });
 
