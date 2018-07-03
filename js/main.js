@@ -64,7 +64,7 @@ var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], {
     loop: true
 }, [ 100, 100 ]);
 
-militar.equipar(pistola);
+militar.equipar(shotgunLonga);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';

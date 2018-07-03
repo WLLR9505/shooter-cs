@@ -26,21 +26,41 @@ class Personagem {
         if (direcao == 'c') {
             this.sprites.quadroInicial = 12;
             this.sprites.quadroFinal = 13;
+            if (mouseY > this.posicao[1]) {
+                //anda para cima olhando para baixo
+                this.sprites.quadroInicial = 9;
+                this.sprites.quadroFinal = 10;
+            }
             this.posicao[1] -= v;
         }
         if (direcao == 'b') {
             this.sprites.quadroInicial = 9;
             this.sprites.quadroFinal = 10;
+            if (mouseY < this.posicao[1]) {
+                //anda para baixo olhando para cima
+                this.sprites.quadroInicial = 12;
+                this.sprites.quadroFinal = 13;
+            }
             this.posicao[1] += v;
         }
         if (direcao == 'e') {
             this.sprites.quadroInicial = 1;
             this.sprites.quadroFinal = 2;
+            if (mouseX > this.posicao[0]) {
+                //anda para esquerda olhando para direita
+                this.sprites.quadroInicial = 6;
+                this.sprites.quadroFinal = 7;
+            }
             this.posicao[0] -= v;
         }
         if (direcao == 'd') {
             this.sprites.quadroInicial = 6;
             this.sprites.quadroFinal = 7;
+            if (mouseX < this.posicao[0]) {
+                //anda para direita olhando para esquerda
+                this.sprites.quadroInicial = 1;
+                this.sprites.quadroFinal = 2;
+            }
             this.posicao[0] += v;
         }
 
@@ -51,6 +71,24 @@ class Personagem {
         this.sprites.render(this.posicao[0], this.posicao[1]);
     }
     update () {
+
+        if (mouseY < this.posicao[1]) {
+            this.sprites.quadroInicial = 11;
+            this.sprites.quadroFinal = 11;
+            if (this.sprites.quadro < (this.sprites.quadroInicial)) {   //se o quadro atual for muito diferente do quadro inicial, já que se for 0 ele passará por todos os quadros até o inicial
+                this.sprites.quadro = this.sprites.quadroInicial - 1;
+            }
+        } else {
+            if (mouseX > this.posicao[0]) {    //mira a direita
+                this.sprites.quadroInicial = 5;
+                this.sprites.quadroFinal = 5;
+            }
+            if (mouseX < this.posicao[0]) {
+                this.sprites.quadroInicial = 3;
+                this.sprites.quadroFinal = 3;
+            }
+        }
+
         function renderArma (pers) {
             if (pers.arma != null) {
                 pers.arma.anatomia.pArma[0] = pers.posicao[0] + 20;
@@ -61,6 +99,7 @@ class Personagem {
             }
         }
         function renderPersonagem (pers) {
+            pers.sprites.update(pers.sprites.quadroInicial, pers.sprites.quadroFinal);
             pers.sprites.render(pers.posicao[0], pers.posicao[1]);
         }
 
