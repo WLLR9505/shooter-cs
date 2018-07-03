@@ -10,7 +10,7 @@ window.addEventListener('load', function () {
 
 THECANVAS.addEventListener('mousemove', onMouseMove);
 THECANVAS.addEventListener('click', function () {
-    drawTiro(balaPistola, ARMA_TESTE, tirosNoAr, [ 300, 150 ], [ mouseX, mouseY ], CONTEXT);
+    militar.atirar();
 });
 
 document.onkeydown = function (e) {
@@ -25,16 +25,16 @@ document.onkeyup = function (e) {
 
 function checkKeys () {
     if (keyPressList[65]) { //A
-        militar.andar(100, 100, 'e');
+        militar.andar('e');
     }
     if (keyPressList[68]) { //D
-        militar.andar(100, 100, 'd');
+        militar.andar('d');
     }
     if (keyPressList[83]) { //S
-        militar.andar(100, 100, 'b');
+        militar.andar('b');
     }
     if (keyPressList[87]) { //W
-        militar.andar(100, 100, 'c');
+        militar.andar('c');
     }
 }
 
@@ -54,7 +54,7 @@ function canvasApp () {
     gameLoop();
 }
 
-var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], 'char_militar1_sheet.png', {
+var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], {
     width: 588,
     height: 63,
     image: MILITAR_SHEET,
@@ -62,13 +62,14 @@ var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], 'char_militar1_shee
     TporQuadro: 6,
     nQuadros: 14,
     loop: true
-}, [100, 100]);
+}, [ 100, 100 ]);
+
+militar.equipar(pistola);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 200);
 
     militar.update();
-    drawArma(ARMA_TESTE ,CONTEXT, [ mouseX, mouseY ]);
     updateTiro(tirosNoAr, CONTEXT);
 }

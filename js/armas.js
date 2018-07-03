@@ -31,7 +31,7 @@ var miraTatica = new Sight('Mira Tatica', 'mira_tatica.png');
 var atc_miraTatica = new Attachment('Mira Tatica', at_MIRA, undefined, miraTatica);
 
 class Weapon {
-    constructor (nome, alcance, velocidadeTiro, nAttachment, imgNome) {
+    constructor (nome, alcance, velocidadeTiro, nAttachment, imgNome, anatomia = {}) {
         this.nome = nome;
         this.alcance = alcance;
         this.velocidadeTiro = velocidadeTiro;   // 2 ~ 5
@@ -39,6 +39,7 @@ class Weapon {
         this.attachment[0] = atc_miraComum;
         this.img = new Image();
         this.img.src = './resources/armas/' + imgNome;
+        this.anatomia = anatomia;
     }
     ConnectAttachment (attachment) {
         switch (attachment.tipo) {
@@ -58,39 +59,55 @@ class Weapon {
     }
 }
 
-var pistola = new Weapon('P1', 30, 3, 2, 'pistola_1.png');
-var fuzil1 = new Weapon('FZ-1A', 60, 4, 3,'fuzil_1.png');
-var shotgunCurta = new Weapon('SHT-C', 50, 2.5, 1, 'shotgun_curta.png');
-var shotgunLonga = new Weapon('SHT-L', 55, 2.9, 1, 'shotgun_longa.png');
+var pistola = new Weapon('P1', 30, 3, 2, 'pistola_1.png',
+    {
+        pArma: [ 0,0 ],
+        pMao: [ 4,9 ]
+    });
+var fuzil1 = new Weapon('FZ-1A', 60, 4, 3,'fuzil_1.png',
+    {
+        pArma: [ 0,0 ],
+        pMao: [ 25, 12 ]
+    });
+var shotgunCurta = new Weapon('SHT-C', 50, 2.5, 1, 'shotgun_curta.png',
+    {
+        pArma: [ 0,0 ],
+        pMao: [ 4, 11 ]
+    });
+var shotgunLonga = new Weapon('SHT-L', 55, 2.9, 1, 'shotgun_longa.png',
+    {
+        pArma: [ 0,0 ],
+        pMao: [ 18 , 12 ]
+    });
 
 
 fuzil1.ConnectAttachment(atc_miraTatica);
 
 var angulo = 0,
-    x = 300,
+    x = 100,
     y = 150;
 
 var balaPistola = new Image();
 balaPistola.src = './resources/armas/bala_pistola.png';
 
-function drawArma (arma, CONTEXT, mouse = [ 2 ]) {
+function drawArma (arma, CONTEXT, XY = [ 2 ]) {
 
     // angulo = rotacao * Math.PI / 180;
-    angulo = Math.atan2(mouse[1] - y, mouse[0] - x);
+    angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
     CONTEXT.save(); //para as alterações não afetarem nada até o restore()
 
-    CONTEXT.translate(x, y);
+    CONTEXT.translate(arma.anatomia.pArma[0], arma.anatomia.pArma[1]);
     CONTEXT.rotate(angulo);
 
-    if (mouse[1] >= y && mouse[0] <= x || mouse[1] <= y && mouse[0] <= x) {
-        CONTEXT.scale(1, -1);   //caso o mouse esteja a esquerda da arma
+    if (XY[1] >= arma.anatomia.pArma[1] && XY[0] <= arma.anatomia.pArma[0] || XY[1] <= arma.anatomia.pArma[1] && XY[0] <= arma.anatomia.pArma[0]) {
+        CONTEXT.scale(1, -1);   //caso a mira esteja a esquerda da arma
     }
-    CONTEXT.drawImage(arma.img, -arma.img.width / 2, -arma.img.height / 2);
+    CONTEXT.drawImage(arma.img, -arma.anatomia.pMao[0], -arma.anatomia.pMao[1]);  //o eixo da arma quando girada é o cabo da mesma
 
     CONTEXT.restore();
 
     //desenha mira da arma
-    CONTEXT.drawImage(arma.attachment[0].extra.img, mouse[0], mouse[1]);
+    CONTEXT.drawImage(arma.attachment[0].extra.img, XY[0], XY[1]);
 
 }
 
@@ -117,16 +134,16 @@ function updateTiro (tirosNoAr, CONTEXT) {
     }
 }
 
-function drawTiro (bala, arma, tirosNoAr = [], posInicial = [], mouse = [ 2 ], CONTEXT) {
+function drawTiro (bala, arma, tirosNoAr = [], XY = [ 2 ], CONTEXT) {
     console.log('tiro');
-    angulo = Math.atan2(mouse[1] - posInicial[1], mouse[0] - posInicial[0]) * 180 / Math.PI;
-    let anguloBala = Math.atan2(mouse[1] - y, mouse[0] - x);
+    angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]) * 180 / Math.PI;
+    let anguloBala = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
 
     var tiro = {};
     tiro.dx = 5 * Math.cos(Math.PI * angulo / 180); //angulo do subida
     tiro.dy = 5 * Math.sin(Math.PI * angulo / 180); //angulo do subida
-    tiro.x = posInicial[0]; //posição de onde parte os tiros
-    tiro.y = posInicial[1]; //posição de onde parte os tiros
+    tiro.x = arma.anatomia.pArma[0]; //posição de onde parte os tiros
+    tiro.y = arma.anatomia.pArma[1]; //posição de onde parte os tiros
     tiro.alcance = arma.alcance;
     tiro.velocidadeTiro = arma.velocidadeTiro;
     tiro.anguloBala = anguloBala;   //angulo em que a bala está rotacionada
@@ -135,7 +152,7 @@ function drawTiro (bala, arma, tirosNoAr = [], posInicial = [], mouse = [ 2 ], C
 
     CONTEXT.save();
 
-    CONTEXT.translate(posInicial[0], posInicial[1]);
+    CONTEXT.translate(arma.anatomia.pArma[0], arma.anatomia.pArma[1]);
     CONTEXT.rotate(anguloBala);
     CONTEXT.drawImage(bala, -bala.width / 2, -bala.height / 2);
     CONTEXT.restore();
