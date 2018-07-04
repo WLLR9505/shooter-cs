@@ -9,20 +9,24 @@ function Sprites (opt) {
     sprite.width = opt.width; //largura imagem
     sprite.height = opt.height; //altura da imagem
     sprite.image = opt.image;
+    sprite.nLinhas = opt.nLinhas;   //numero real de linhas
+    sprite.nQuadros = opt.nQuadros; //numero real de quadros em cada linha
     sprite.TporQuadro = opt.TporQuadro || 0, //tempo até o proximo quadro - min 4 max 10
     sprite.loop = opt.loop; //se true então voltará ao quadro de início
-    sprite.render = function (x, y) {
-        sprite.context.drawImage(sprite.image, sprite.quadro * sprite.width / nQuadros, 0, sprite.width / nQuadros, sprite.height, x, y, sprite.width / nQuadros, sprite.height);
+    sprite.render = function (x, y, l) {
+        sprite.context.drawImage(sprite.image, sprite.quadro * sprite.width / nQuadros, l * sprite.height / sprite.nLinhas, sprite.width / nQuadros, sprite.height / sprite.nLinhas, x, y, sprite.width / nQuadros, sprite.height / sprite.nLinhas);
     };
 
-    sprite.update = function (qInicial, qFinal) {
+    sprite.update = function () {
         contador += 1;
         if (contador > sprite.TporQuadro) {
             contador = 0;
-            if (sprite.quadro < qFinal - 1) {
+            if (sprite.quadro < sprite.quadroFinal) {
                 sprite.quadro += 1;
             } else if (sprite.loop) {
-                sprite.quadro = qInicial - 1;
+                sprite.quadro = 0;
+                sprite.quadroInicial = 0;
+                sprite.quadroFinal = 0;
             }
         }
     };

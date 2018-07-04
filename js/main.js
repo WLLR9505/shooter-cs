@@ -26,15 +26,23 @@ document.onkeyup = function (e) {
 function checkKeys () {
     if (keyPressList[65]) { //A
         militar.andar('e');
+    } else {
+        militar.postura = postura(militar, PARADO_D);
     }
     if (keyPressList[68]) { //D
         militar.andar('d');
+    } else {
+        militar.postura = postura(militar, PARADO_D);
     }
     if (keyPressList[83]) { //S
         militar.andar('b');
+    } else {
+        militar.postura = postura(militar, PARADO_D);
     }
     if (keyPressList[87]) { //W
         militar.andar('c');
+    } else {
+        militar.postura = postura(militar, PARADO_D);
     }
 }
 
@@ -55,12 +63,13 @@ function canvasApp () {
 }
 
 var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], {
-    width: 588,
-    height: 63,
+    width: 126,
+    height: 630,
     image: MILITAR_SHEET,
     context: CONTEXT,
     TporQuadro: 6,
-    nQuadros: 14,
+    nQuadros: 3,
+    nLinhas: 10,
     loop: true
 }, [ 100, 100 ]);
 
