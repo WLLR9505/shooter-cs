@@ -16,7 +16,6 @@ THECANVAS.addEventListener('click', function () {
 document.onkeydown = function (e) {
     e = e ? e : window.event;
     keyPressList[e.keyCode] = true;
-    console.log(keyPressList[e.code, ' ', e.keyCode]);
 };
 
 document.onkeyup = function (e) {
@@ -31,7 +30,7 @@ function checkKeys () {
     } else {
         v = 3;
     }
-    
+
     if (keyPressList[65]) { //A
         militar.andar('e', v);
     } else {
@@ -70,7 +69,7 @@ function canvasApp () {
     gameLoop();
 }
 
-var militar = new Personagem('Militar 1', 10, 5, [ 10, 10 ], {
+var militar = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
     width: 126,
     height: 630,
     image: MILITAR_SHEET,

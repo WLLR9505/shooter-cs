@@ -36,6 +36,13 @@ function drawMousePosition (CONTEXT, mouseX, mouseY) {
     CONTEXT.fillText('x ' + mouseX + '  y ' + mouseY, 5, 20);
 }
 
+function inspect(dado) {
+    CONTEXT.fillStyle = '#ffffff';
+    CONTEXT.font = '10px consolas';
+    CONTEXT.textBaseline = 'top';
+    CONTEXT.fillText('inspecionando:' + dado, 5, 40);
+}
+
 function devInfo (THECANVAS, CONTEXT, mouseX, mouseY) {
     drawFPS(THECANVAS, CONTEXT);
     drawMousePosition(CONTEXT, mouseX, mouseY);
