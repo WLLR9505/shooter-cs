@@ -86,7 +86,7 @@ var shotgunLonga = new Weapon('SHT-L', 55, 4.7, 1, 'shotgun_longa.png',
 
 
 fuzil1.ConnectAttachment(atc_miraTatica);
-shotgunLonga.ConnectAttachment(atc_miraPontoVermelho);
+shotgunLonga.ConnectAttachment(atc_miraTatica);
 
 var angulo = 0,
     x = 100,
@@ -110,9 +110,11 @@ function drawArma (arma, CONTEXT, XY = [ 2 ]) {
     CONTEXT.drawImage(arma.img, -arma.anatomia.pMao[0], -arma.anatomia.pMao[1]);  //o eixo da arma quando girada é o cabo da mesma
 
     CONTEXT.restore();
+    let pMiraX = XY[0] - arma.attachment[0].extra.img.width;
+    let pMiraY = XY[1] - arma.attachment[0].extra.img.height;
 
     //desenha mira da arma
-    CONTEXT.drawImage(arma.attachment[0].extra.img, XY[0], XY[1]);
+    CONTEXT.drawImage(arma.attachment[0].extra.img, pMiraX, pMiraY);
 }
 
 function updateTiro (tirosNoAr, CONTEXT) {
