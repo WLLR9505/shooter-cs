@@ -37,8 +37,7 @@ class Personagem {
             this.postura -= 5;   //todos os posturas armados sao (desarmado - 5)
         }
     }
-    andar (direcao) {
-        let v = 3;
+    andar (direcao, v) {
         if (direcao == 'c') {
             this.postura = postura(this, ANDADADO_D_COSTAS);
             if (mouseY > this.posicao[1]) {

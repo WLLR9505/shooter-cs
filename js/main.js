@@ -1,7 +1,7 @@
 const FPS = 30;
 const ARMA_TESTE = fuzil1;
 var intervalTime = 1000 / FPS;
-var mouseX, mouseY;
+var mouseX, mouseY, v = 3;
 var tirosNoAr = new Array(0);
 var keyPressList = [];
 window.addEventListener('load', function () {
@@ -16,6 +16,7 @@ THECANVAS.addEventListener('click', function () {
 document.onkeydown = function (e) {
     e = e ? e : window.event;
     keyPressList[e.keyCode] = true;
+    console.log(keyPressList[e.code, ' ', e.keyCode]);
 };
 
 document.onkeyup = function (e) {
@@ -24,23 +25,30 @@ document.onkeyup = function (e) {
 };
 
 function checkKeys () {
+
+    if (keyPressList[16]) { //Shift L
+        v = militar.velocidade;
+    } else {
+        v = 3;
+    }
+    
     if (keyPressList[65]) { //A
-        militar.andar('e');
+        militar.andar('e', v);
     } else {
         militar.postura = postura(militar, PARADO_D);
     }
     if (keyPressList[68]) { //D
-        militar.andar('d');
+        militar.andar('d', v);
     } else {
         militar.postura = postura(militar, PARADO_D);
     }
     if (keyPressList[83]) { //S
-        militar.andar('b');
+        militar.andar('b', v);
     } else {
         militar.postura = postura(militar, PARADO_D);
     }
     if (keyPressList[87]) { //W
-        militar.andar('c');
+        militar.andar('c', v);
     } else {
         militar.postura = postura(militar, PARADO_D);
     }
