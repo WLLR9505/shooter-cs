@@ -1,7 +1,8 @@
 const FPS = 30;
 const ARMA_TESTE = fuzil1;
 var intervalTime = 1000 / FPS;
-var mouseX, mouseY, v = 3;
+var mouseX, mouseY,
+    v = 3;
 var tirosNoAr = new Array(0);
 var keyPressList = [];
 window.addEventListener('load', function () {
@@ -77,15 +78,31 @@ var militar = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
     TporQuadro: 6,
     nQuadros: 3,
     nLinhas: 10,
+    posX: 100,
+    posY: 100,
     loop: true
 }, [ 100, 100 ]);
 
+var MESA = new Image();
+MESA.src = './resources/mesa.png';
+var mesa = Sprites(
+    {
+        context: CONTEXT,
+        image: MESA,
+        width: 90,
+        height: 91,
+        posX: 300,
+        posY: 100
+    });
+objColisao.push(mesa);
 militar.equipar(shotgunLonga);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
-    CONTEXT.fillRect(0, 0, 600, 200);
+    CONTEXT.fillRect(0, 0, 600, 350);
+    mesa.render(mesa.posX, mesa.posY, 0);
 
+    checkCollision(militar);
     militar.update();
     updateTiro(tirosNoAr, CONTEXT);
 }

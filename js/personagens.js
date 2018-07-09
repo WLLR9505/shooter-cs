@@ -13,14 +13,13 @@ const ANDANDO_D_DIREITA = 9;
 
 
 class Personagem {
-    constructor (nome, velocidade, energia, vida = [ 2 ], spriteParams, posicao = [ 2 ]) {
+    constructor (nome, velocidade, energia, vida = [ 2 ], spriteParams) {
         this.nome = nome;
         this.velocidade = velocidade;
         this.energia = energia;
         this.vida = vida;
         this.arma = null;
         this.sprites = Sprites(spriteParams);
-        this.posicao = posicao;
         this.postura = 5;    //parado desarmado
     }
     spawn (x, y) {
@@ -32,43 +31,43 @@ class Personagem {
     equipar (arma) {
         if (this.arma == null) {
             this.arma = arma;
-            this.arma.anatomia.pArma[0] = this.posicao[0] + 20;
-            this.arma.anatomia.pArma[1] = this.posicao[1] + 45;
+            this.arma.anatomia.pArma[0] = this.sprites.posX + 20;
+            this.arma.anatomia.pArma[1] = this.sprites.posY + 45;
             this.postura -= 5;   //todos os posturas armados sao (desarmado - 5)
         }
     }
     andar (direcao, v) {
         if (direcao == 'c') {
             this.postura = postura(this, ANDADADO_D_COSTAS);
-            if (mouseY > this.posicao[1]) {
+            if (mouseY > this.sprites.posY) {
                 //anda para cima olhando para baixo
                 this.postura = postura(this, ANDANDO_D_FRENTE);
             }
-            this.posicao[1] -= v;
+            this.sprites.posY -= v;
         }
         if (direcao == 'b') {
             this.postura = postura(this, ANDANDO_D_FRENTE);
-            if (mouseY < this.posicao[1]) {
+            if (mouseY < this.sprites.posY) {
                 //anda para baixo olhando para cima
                 this.postura = postura(this, ANDADADO_D_COSTAS);
             }
-            this.posicao[1] += v;
+            this.sprites.posY += v;
         }
         if (direcao == 'e') {
             this.postura = postura(this, ANDANDO_D_ESQUERDA);
-            if (mouseX > this.posicao[0]) {
+            if (mouseX > this.sprites.posX) {
                 //anda para esquerda olhando para direita
                 this.postura = postura(this, ANDANDO_D_DIREITA);
             }
-            this.posicao[0] -= v;
+            this.sprites.posX -= v;
         }
         if (direcao == 'd') {
             this.postura = postura(this,ANDANDO_D_DIREITA);
-            if (mouseX < this.posicao[0]) {
+            if (mouseX < this.sprites.posX) {
                 this.postura = postura(this, ANDANDO_D_ESQUERDA);
                 //anda para direita olhando para esquerda
             }
-            this.posicao[0] += v;
+            this.sprites.posX += v;
         }
 
         //quadros de movimento
@@ -76,24 +75,24 @@ class Personagem {
         this.sprites.quadroFinal = 2;
 
         this.sprites.update(this.sprites.quadroInicial, this.sprites.quadroFinal);
-        this.sprites.render(this.posicao[0], this.posicao[1]);
+        this.sprites.render(this.sprites.posX, this.sprites.posY);
     }
     update () {
-        if (mouseY < this.posicao[1]) {
+        if (mouseY < this.sprites.posY) {
             this.postura = postura(this, ANDADADO_D_COSTAS);
         } else {
-            if (mouseX > this.posicao[0]) {    //mira a direita
+            if (mouseX > this.sprites.posX) {    //mira a direita
                 this.postura = postura(this, ANDANDO_D_DIREITA);
             }
-            if (mouseX < this.posicao[0]) {
+            if (mouseX < this.sprites.posX) {
                 this.postura = postura(this, ANDANDO_D_ESQUERDA);
             }
         }
 
         function renderArma (pers) {
             if (pers.arma != null) {
-                pers.arma.anatomia.pArma[0] = pers.posicao[0] + 20;
-                pers.arma.anatomia.pArma[1] = pers.posicao[1] + 45;
+                pers.arma.anatomia.pArma[0] = pers.sprites.posX + 20;
+                pers.arma.anatomia.pArma[1] = pers.sprites.posY + 45;
 
                 drawArma(pers.arma, CONTEXT, [ mouseX, mouseY ]);
                 return pers;
@@ -101,7 +100,7 @@ class Personagem {
         }
         function renderPersonagem (pers) {
             pers.sprites.update();
-            pers.sprites.render(pers.posicao[0], pers.posicao[1], pers.postura);
+            pers.sprites.render(pers.sprites.posX, pers.sprites.posY, pers.postura);
         }
 
         //utilizado para "layer" com a arma (a frente ou atrás)
