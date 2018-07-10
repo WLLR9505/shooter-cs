@@ -94,13 +94,24 @@ var mesa = Sprites(
         posX: 300,
         posY: 100
     });
+var mesa2 = Sprites(
+    {
+        context: CONTEXT,
+        image: MESA,
+        width: 90,
+        height: 91,
+        posX: 100,
+        posY: 170
+    });
 objColisao.push(mesa);
+objColisao.push(mesa2);
 militar.equipar(shotgunLonga);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 350);
     mesa.render(mesa.posX, mesa.posY, 0);
+    mesa2.render(mesa2.posX, mesa2.posY, 0);
 
     checkCollision(militar);
     militar.update();

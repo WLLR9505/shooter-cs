@@ -72,6 +72,11 @@ function block (obj1, obj2) {
     //obj2  : objeto
     //catetos: armazenam a distancia entre os elementos no eixo X e Y
 
+    if (obj1 == undefined || obj2 == undefined) {
+        console.log('obj1 ou obj2 indefinidos');
+        return false;
+    }
+
     var distX = obj1.centerX() - obj2.centerX(); //distancia entre o centros dos objetos
     var distY = obj1.centerY() - obj2.centerY(); //distancia entre o centros dos objetos
 
@@ -101,7 +106,9 @@ function block (obj1, obj2) {
                 obj1.posX -= overX;
             }
         }
+        return true;
     }
+    return false;
 }
 
 function checkCollision (player) {
@@ -118,7 +125,7 @@ function checkCollision (player) {
         player.sprites.posY = THECANVAS.height - 63;
     }
 
-    for (var i = 0; i < objColisao.length; i++) {
+    for (let i = 0; i < objColisao.length; i++) {
         block(player.sprites, objColisao[i]);
     }
 }

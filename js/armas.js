@@ -124,19 +124,30 @@ function updateTiro (tirosNoAr, CONTEXT) {
     }
     for (var i = 0; i < tirosNoAr.length; i++) {
         tirosNoAr[i].alcance--;
-        tirosNoAr[i].x += tirosNoAr[i].dx * tirosNoAr[i].velocidadeTiro;
-        tirosNoAr[i].y += tirosNoAr[i].dy * tirosNoAr[i].velocidadeTiro;
+        tirosNoAr[i].posX += tirosNoAr[i].dx * tirosNoAr[i].velocidadeTiro;
+        tirosNoAr[i].posY += tirosNoAr[i].dy * tirosNoAr[i].velocidadeTiro;
         if (tirosNoAr[i].alcance == 0) {
             tirosNoAr.shift();
-            console.log('tiro removido ', i);
+            console.log('tiro removido', tirosNoAr.length);
             continue;
         }
         CONTEXT.save();
 
-        CONTEXT.translate(tirosNoAr[i].x, tirosNoAr[i].y);
+        CONTEXT.translate(tirosNoAr[i].posX, tirosNoAr[i].posY);
         CONTEXT.rotate(tirosNoAr[i].anguloBala);
         CONTEXT.drawImage(balaPistola, -balaPistola.width / 2, -balaPistola.height / 2);
         CONTEXT.restore();
+
+        ///verifica colisão do tiro atual com objetos
+        for (let i2 = 0; i2 < objColisao.length; i2++) {
+            if (block(tirosNoAr[i], objColisao[i2])) {
+                tirosNoAr.shift();
+                console.log('tiro removido por colisao');
+                if(tirosNoAr.length == 0) {
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -145,11 +156,16 @@ function drawTiro (bala, arma, tirosNoAr = [], XY = [ 2 ], CONTEXT) {
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]) * 180 / Math.PI;
     let anguloBala = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
 
-    var tiro = {};
+    var tiro = Sprites({
+        context: CONTEXT,
+        image: bala,
+        width: 20,
+        height: 9
+    });
     tiro.dx = arma.velocidadeTiro * Math.cos(Math.PI * angulo / 180); //angulo do subida
     tiro.dy = arma.velocidadeTiro * Math.sin(Math.PI * angulo / 180); //angulo do subida
-    tiro.x = arma.anatomia.pArma[0] + tiro.dx * 5; //posição de onde parte os tiros
-    tiro.y = (arma.anatomia.pArma[1] - arma.anatomia.pCano[1]) + tiro.dy * 5; //posição de onde parte os tiros
+    tiro.posX = arma.anatomia.pArma[0] + tiro.dx * 5; //posição de onde parte os tiros
+    tiro.posY = (arma.anatomia.pArma[1] - arma.anatomia.pCano[1]) + tiro.dy * 5; //posição de onde parte os tiros
     tiro.alcance = arma.alcance;
     tiro.velocidadeTiro = arma.velocidadeTiro;
     tiro.anguloBala = anguloBala;   //angulo em que a bala está rotacionada
@@ -158,8 +174,8 @@ function drawTiro (bala, arma, tirosNoAr = [], XY = [ 2 ], CONTEXT) {
 
     CONTEXT.save();
 
-    CONTEXT.translate(tiro.x, tiro.y);
+    CONTEXT.translate(tiro.posX, tiro.posY);
     CONTEXT.rotate(anguloBala);
-    CONTEXT.drawImage(bala, tiro.x, tiro.y);
+    CONTEXT.drawImage(bala, tiro.posX, tiro.posY);
     CONTEXT.restore();
 }
