@@ -31,9 +31,10 @@ var miraTatica = new Sight('Mira Tatica', 'mira_tatica.png');
 var atc_miraTatica = new Attachment('Mira Tatica', at_MIRA, undefined, miraTatica);
 
 class Weapon {
-    constructor (nome, alcance, velocidadeTiro, nAttachment, imgNome, anatomia = {}) {
+    constructor (nome, alcance, precisao, velocidadeTiro, nAttachment, imgNome, anatomia = {}) {
         this.nome = nome;
         this.alcance = alcance;
+        this.precisao = precisao; // 0 ~ 10 quanto menor, maior a precisao
         this.velocidadeTiro = velocidadeTiro;   // 2 ~ 5
         this.attachment = new Array(nAttachment);
         this.attachment[0] = atc_miraComum;
@@ -59,25 +60,25 @@ class Weapon {
     }
 }
 
-var pistola = new Weapon('P1', 30, 5.5, 2, 'pistola_1.png',
+var pistola = new Weapon('P1', 30, 2, 5.5, 2, 'pistola_1.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 4,9 ],
         pCano: [ 21, 6 ]
     });
-var fuzil1 = new Weapon('FZ-1A', 60, 6, 3,'fuzil_1.png',
+var fuzil1 = new Weapon('FZ-1A', 60, 4, 6, 3,'fuzil_1.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 25, 12 ],
         pCano: [ 57, 6 ]
     });
-var shotgunCurta = new Weapon('SHT-C', 50, 4.2, 1, 'shotgun_curta.png',
+var shotgunCurta = new Weapon('SHT-C', 50, 7,4.2, 1, 'shotgun_curta.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 4, 11 ],
         pCano: [ 29, 6 ]
     });
-var shotgunLonga = new Weapon('SHT-L', 55, 4.7, 1, 'shotgun_longa.png',
+var shotgunLonga = new Weapon('SHT-L', 55, 6, 4.7, 1, 'shotgun_longa.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 18 , 12 ],
@@ -154,6 +155,7 @@ function updateTiro (tirosNoAr, CONTEXT) {
 function drawTiro (bala, arma, tirosNoAr = [], XY = [ 2 ], CONTEXT) {
     console.log('tiro');
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]) * 180 / Math.PI;
+    angulo += RandomNumber(-arma.precisao, +arma.precisao);
     let anguloBala = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
 
     var tiro = Sprites({

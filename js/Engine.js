@@ -58,10 +58,10 @@ function Sprites (opt) {
 
 
 
-function drawObject (obj, p = [ 2 ]) {
-    CONTEXT.save();
-    CONTEXT.drawImage(obj, p[0], p[1]);
-    CONTEXT.restore();
+function renderizarObjetos() {
+    for (var i = 0; i < objColisao.length; i++) {
+        objColisao[i].render(objColisao[i].posX, objColisao[i].posY, 0);
+    }
 }
 
 
@@ -128,4 +128,8 @@ function checkCollision (player) {
     for (let i = 0; i < objColisao.length; i++) {
         block(player.sprites, objColisao[i]);
     }
+}
+
+function RandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }

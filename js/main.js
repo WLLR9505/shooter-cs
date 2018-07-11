@@ -110,8 +110,7 @@ militar.equipar(shotgunLonga);
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 350);
-    mesa.render(mesa.posX, mesa.posY, 0);
-    mesa2.render(mesa2.posX, mesa2.posY, 0);
+    renderizarObjetos()
 
     checkCollision(militar);
     militar.update();
