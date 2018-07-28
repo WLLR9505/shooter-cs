@@ -78,7 +78,7 @@ var militar = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
     TporQuadro: 6,
     nQuadros: 3,
     nLinhas: 10,
-    posX: 100,
+    posX: 400,
     posY: 100,
     loop: true
 }, [ 100, 100 ]);
@@ -104,12 +104,13 @@ var mesa2 = Sprites(
         posY: 170
     });
 objColisao.push(mesa);
-objColisao.push(mesa2);
+// objColisao.push(mesa2);
 militar.equipar(shotgunLonga);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 350);
+    renderizarMapa(mapaTeste);
     renderizarObjetos()
 
     checkCollision(militar);

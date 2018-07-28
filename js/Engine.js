@@ -21,6 +21,10 @@ function Sprites (opt) {
         sprite.context.drawImage(sprite.image, sprite.quadro * sprite.width / nQuadros, l * sprite.height / sprite.nLinhas, sprite.width / nQuadros, sprite.height / sprite.nLinhas, x, y, sprite.width / nQuadros, sprite.height / sprite.nLinhas);
     };
 
+    sprite.renderThis = function (quadro, linha, x, y) {
+        sprite.context.drawImage(sprite.image, quadro * sprite.width / nQuadros, linha * sprite.height / sprite.nLinhas, sprite.width / nQuadros, sprite.height / sprite.nLinhas, x, y, sprite.width / nQuadros, sprite.height / sprite.nLinhas);
+    };
+
     sprite.update = function () {
         contador += 1;
         if (contador > sprite.TporQuadro) {
@@ -38,27 +42,46 @@ function Sprites (opt) {
     sprite.halfWidth = function () {
         //retorna o centro da largura
         return (sprite.width / sprite.nQuadros) / 2;
-    }
+    };
 
     sprite.halfHeight  = function () {
         // retorna o centro da altura
         return (sprite.height / sprite.nLinhas) / 2;
-    }
+    };
 
     sprite.centerX = function () {
         return sprite.posX + sprite.halfWidth();
-    }
+    };
 
     sprite.centerY = function () {
         return sprite.posY + sprite.halfHeight();
-    }
+    };
 
     return sprite;
 }
 
+var texturas = Sprites(
+    {
+        context: CONTEXT,
+        height: 32,
+        width: 160,
+        image: TEXTURAS,
+        nQuadros: 5
+    }
+);
 
+function renderizarMapa (mapa) {
+    for (let i = 0; i < mapa.length; i++) {   ///linhas
+        for (let i2 = 0; i2 < mapa[i].length; i2++) {  //colunas
+            var tile = mapa[i][i2];
+            var x = i2 * 32;    //Horizontal
+            var y = i * 32;     //Vertical
+            texturas.renderThis(tile, 0, x, y);
+        }
+    }
+}
 
-function renderizarObjetos() {
+function renderizarObjetos () {
     for (var i = 0; i < objColisao.length; i++) {
         objColisao[i].render(objColisao[i].posX, objColisao[i].posY, 0);
     }
@@ -130,6 +153,6 @@ function checkCollision (player) {
     }
 }
 
-function RandomNumber(min, max) {
+function RandomNumber (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
