@@ -105,13 +105,13 @@ var mesa2 = Sprites(
     });
 objColisao.push(mesa);
 // objColisao.push(mesa2);
-militar.equipar(shotgunLonga);
+militar.equipar(fuzil1);
 
 function drawScreen () {
     CONTEXT.fillStyle = '#0099FF';
     CONTEXT.fillRect(0, 0, 600, 350);
     renderizarMapa(mapaTeste);
-    renderizarObjetos()
+    renderizarObjetos();
 
     checkCollision(militar);
     militar.update();

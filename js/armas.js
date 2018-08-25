@@ -16,19 +16,35 @@ class Attachment {
 }
 
 class Sight {
-    constructor (nome, imgNome) {
+    constructor (nome, imgNome, atcImgNome) {
         this.nome = nome;
         this.img = new Image();
         this.img.src = './resources/armas/attachments/' + imgNome;
+        if (atcImgNome != undefined) {
+            this.atcImg = new Image();
+            this.atcImg.src = './resources/armas/attachments/' + atcImgNome;
+        }
     }
 }
 
 var miraComum = new Sight('Mira Comum', 'mira_comum.png');
 var atc_miraComum = new Attachment('Mira Comum', at_MIRA, undefined, miraComum);
-var miraPontoVermelho = new Sight('Ponto Vermelho', 'mira_ponto_vermelho.png');
+
+var miraPontoVermelho = new Sight('Ponto Vermelho', 'mira_ponto_vermelho.png', 'atc_ponto_vermelho.png');
 var atc_miraPontoVermelho = new Attachment('Ponto Vermelho', at_MIRA, undefined, miraPontoVermelho);
-var miraTatica = new Sight('Mira Tatica', 'mira_tatica.png');
+
+var miraTatica = new Sight('Mira Tatica', 'mira_tatica.png', 'atc_tatica.png');
 var atc_miraTatica = new Attachment('Mira Tatica', at_MIRA, undefined, miraTatica);
+
+var mira2 = new Sight('Luneta 2x', 'mira_tatica.png', 'atc_luneta_2x.png');
+var atc_luneta2 = new Attachment('Luneta 2x', at_MIRA, undefined, mira2);
+
+var mira4 = new Sight('Luneta 4x', 'mira_tatica.png', 'atc_luneta_4x.png');
+var atc_luneta4 = new Attachment('Luneta 4x', at_MIRA, undefined, mira4);
+
+var mira8 = new Sight('Luneta 8x', 'mira_tatica.png', 'atc_luneta_8x.png');
+var atc_luneta8 = new Attachment('Luneta 8x', at_MIRA, undefined, mira8);
+
 
 class Weapon {
     constructor (nome, alcance, precisao, velocidadeTiro, nAttachment, imgNome, anatomia = {}) {
@@ -64,29 +80,33 @@ var pistola = new Weapon('P1', 30, 2, 5.5, 2, 'pistola_1.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 4,9 ],
-        pCano: [ 21, 6 ]
+        pCano: [ 21, 6 ],
+        pATCMira: [ 0, 12 ]
     });
 var fuzil1 = new Weapon('FZ-1A', 60, 4, 6, 3,'fuzil_1.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 25, 12 ],
-        pCano: [ 57, 6 ]
+        pCano: [ 57, 6 ],
+        pATCMira: [ 0, 15 ]
     });
 var shotgunCurta = new Weapon('SHT-C', 50, 7,4.2, 1, 'shotgun_curta.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 4, 11 ],
-        pCano: [ 29, 6 ]
+        pCano: [ 29, 6 ],
+        pATCMira: [ 0, 15 ]
     });
 var shotgunLonga = new Weapon('SHT-L', 55, 6, 4.7, 1, 'shotgun_longa.png',
     {
         pArma: [ 0,0 ],
         pMao: [ 18 , 12 ],
-        pCano: [ 43, 6 ]
+        pCano: [ 43, 6 ],
+        pATCMira: [ 0, 15 ]
     });
 
 
-fuzil1.ConnectAttachment(atc_miraTatica);
+fuzil1.ConnectAttachment(atc_miraPontoVermelho);
 shotgunLonga.ConnectAttachment(atc_miraTatica);
 
 var angulo = 0,
@@ -109,6 +129,9 @@ function drawArma (arma, CONTEXT, XY = [ 2 ]) {
         CONTEXT.scale(1, -1);   //caso a mira esteja a esquerda da arma
     }
     CONTEXT.drawImage(arma.img, -arma.anatomia.pMao[0], -arma.anatomia.pMao[1]);  //o eixo da arma quando girada é o cabo da mesma
+    if (arma.attachment[0].extra.atcImg != undefined) {
+        CONTEXT.drawImage(arma.attachment[0].extra.atcImg, arma.anatomia.pATCMira[0], -arma.anatomia.pATCMira[1]);
+    }
 
     CONTEXT.restore();
     let pMiraX = XY[0] - arma.attachment[0].extra.img.width;
