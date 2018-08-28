@@ -26,7 +26,7 @@ class Personagem {
         this.sprites.render(x, y);
     }
     atirar () {
-        drawTiro(balaPistola, this.arma, tirosNoAr, [ mouseX, mouseY ], CONTEXT);
+        this.arma.atirar();
     }
     equipar (arma) {
         if (this.arma == null) {

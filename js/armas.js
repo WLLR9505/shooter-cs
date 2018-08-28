@@ -58,6 +58,9 @@ class Weapon {
         this.img.src = './resources/armas/' + imgNome;
         this.anatomia = anatomia;
     }
+    atirar () {
+        drawTiro(balaPistola, this, tirosNoAr, [ mouseX, mouseY ], CONTEXT);
+    }
     ConnectAttachment (attachment) {
         switch (attachment.tipo) {
             case at_MIRA:
