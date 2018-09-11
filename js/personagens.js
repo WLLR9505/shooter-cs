@@ -25,8 +25,15 @@ class Personagem {
     spawn (x, y) {
         this.sprites.render(x, y);
     }
-    atirar () {
-        this.arma.atirar();
+    agir (modo) { // 1 : primario 2 : secundario
+        switch (modo) {
+            case 1:
+                this.arma.atirar();
+                break;
+            case 2:
+                this.arma.especial();
+                break;
+        }
     }
     equipar (arma) {
         if (this.arma == null) {
