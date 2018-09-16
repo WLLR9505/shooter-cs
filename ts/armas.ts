@@ -1,12 +1,18 @@
-const at_MIRA = 0;
-const at_PENTE = 1;
-const at_CANO = 2;
-const at_ESPECIAL = 3;
+enum tipo_Anexo {
+    MIRA,
+    PENTE,
+    CANO,
+    ESPECIAL
+}
 
 class Anexo {
+    nome: string;
+    tipo: any;
+	extra: any;
+    img: HTMLImageElement;
     constructor (nome, tipo, imgNome, extra) {
-        this.tipo = tipo;
         this.nome = nome;
+        this.tipo = tipo;
         this.extra = extra;
         if (imgNome != undefined) {
             this.img = new Image();
@@ -15,8 +21,12 @@ class Anexo {
     }
 }
 
-class Sight {
-    constructor (nome, imgNome, atcImgNome) {
+class Mira {
+    nome: string;
+    img: HTMLImageElement;
+	atcImg: HTMLImageElement;
+    constructor (nome, imgNome, atcImgNome?) {
+        //último parámetro caso a mira possa ser equipada na arma
         this.nome = nome;
         this.img = new Image();
         this.img.src = './resources/armas/attachments/' + imgNome;
@@ -27,28 +37,16 @@ class Sight {
     }
 }
 
-var miraComum = new Sight('Mira Comum', 'mira_comum.png');
-var atc_miraComum = new Anexo('Mira Comum', at_MIRA, undefined, miraComum);
-
-var miraPontoVermelho = new Sight('Ponto Vermelho', 'mira_ponto_vermelho.png', 'atc_ponto_vermelho.png');
-var atc_miraPontoVermelho = new Anexo('Ponto Vermelho', at_MIRA, undefined, miraPontoVermelho);
-
-var miraTatica = new Sight('Mira Tatica', 'mira_tatica.png', 'atc_tatica.png');
-var atc_miraTatica = new Anexo('Mira Tatica', at_MIRA, undefined, miraTatica);
-
-var mira2 = new Sight('Luneta 2x', 'mira_tatica.png', 'atc_luneta_2x.png');
-var atc_luneta2 = new Anexo('Luneta 2x', at_MIRA, undefined, mira2);
-
-var mira4 = new Sight('Luneta 4x', 'mira_tatica.png', 'atc_luneta_4x.png');
-var atc_luneta4 = new Anexo('Luneta 4x', at_MIRA, undefined, mira4);
-
-var mira8 = new Sight('Luneta 8x', 'mira_tatica.png', 'atc_luneta_8x.png');
-var atc_luneta8 = new Anexo('Luneta 8x', at_MIRA, undefined, mira8);
-
-var atc_apoio = new Anexo('Apoio Tatico', at_CANO, 'apoio_tatico.png', undefined);
-
 class Weapon {
-    constructor (nome, alcance, precisao, velocidadeTiro, nAttachment, imgNome, anatomia = {}, tipo) {
+    nome: string;
+    alcance: any;
+    precisao: any;
+    velocidadeTiro: any;
+    attachment: any[];
+	img: HTMLImageElement;
+    anatomia: {};
+    tipo: any;
+    constructor (nome, alcance, precisao, velocidadeTiro, nAttachment, imgNome, anatomia = {}, tipo?) {
         this.nome = nome;
         this.alcance = alcance;
         this.precisao = precisao; // 0 ~ 10 quanto menor, maior a precisao
@@ -70,18 +68,18 @@ class Weapon {
     }
     ConectarAnexo (attachment) {
         switch (attachment.tipo) {
-            case at_MIRA:
+            case tipo_Anexo.MIRA:
                 this.attachment[0] = attachment;
                 break;
-            case at_PENTE:
+            case tipo_Anexo.PENTE:
                 this.attachment[1] = attachment;
                 break;
-            case at_CANO:   //anexos acoplados no cano
+            case tipo_Anexo.CANO:   //anexos acoplados no cano
                 if (this.anatomia.pATCBase != undefined) {
                     this.attachment[2] = attachment;
                 }
                 break;
-            case at_ESPECIAL:
+            case tipo_Anexo.ESPECIAL:
                 if (this.anatomia.pATCEspecial != undefined) {
                     this.attachment[3] = attachment;
                     this.attachment[3].anatomia.pArma = this.anatomia.pArma;
@@ -91,54 +89,6 @@ class Weapon {
     }
 }
 
-var pistola = new Weapon('P1', 30, 2, 5.5, 2, 'pistola_1.png',
-    {
-        pArma: [ 0,0 ],
-        pMao: [ 4,9 ],
-        pCano: [ 21, 6 ],
-        pATCMira: [ 0, 12 ]
-    });
-var fuzil1 = new Weapon('FZ-1A', 60, 4, 6, 3,'fuzil_1.png',
-    {
-        pArma: [ 0,0 ],
-        pMao: [ 25, 12 ],
-        pCano: [ 57, 6 ],
-        pATCMira: [ 0, 15 ],
-        pATCBase: [ 20, 2 ]
-    });
-var shotgunCurta = new Weapon('SHT-C', 50, 7,4.2, 1, 'shotgun_curta.png',
-    {
-        pArma: [ 0,0 ],
-        pMao: [ 4, 11 ],
-        pCano: [ 29, 6 ],
-        pATCMira: [ 0, 15 ]
-    });
-var shotgunLonga = new Weapon('SHT-L', 55, 6, 4.7, 2, 'shotgun_longa.png',
-    {
-        pArma: [ 0,0 ],
-        pMao: [ 18 , 12 ],
-        pCano: [ 43, 6 ],
-        pATCMira: [ 0, 15 ],
-        pATCBase: [ 15, 2 ]
-    });
-
-var FMA = new Weapon('FM-A', 70, 2, 5, 3,'fm-a.png',
-    {
-        pArma: [ 0,0 ],
-        pMao: [ 30, 12 ],
-        pCano: [ 55, 6 ],
-        pATCMira: [ 10, 15 ],
-        pATCBase: [ 15, 2 ],
-        pATCEspecial: [ 5, 2 ]
-    });
-
-var SMMA = new Weapon('SMM-A', 40, 3, 5.5, 2,'smm-a.png',
-    {
-        pArma: [ 0,0 ],
-        pMao: [ 30, 12 ],
-        pCano: [ 50, 6 ],
-        pATCMira: [ -5, 15 ]
-    }, at_ESPECIAL);
 
 var angulo = 0,
     x = 100,
