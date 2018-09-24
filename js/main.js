@@ -130,13 +130,15 @@ testArma.ConectarAnexo(atc_miraPontoVermelho);
 militar.equipar(testArma);
 
 function drawScreen () {
-    CONTEXT.fillStyle = '#0099FF';
-    CONTEXT.fillRect(0, 0, 600, 350);
-    renderizarMapa(mapaTeste);
+    CONTEXT.clearRect(0,0,THECANVAS.width,THECANVAS.height);
+    CONTEXT.save();
+    CONTEXT.translate(-cam.x, -cam.y);
+    renderizarMapa(mapaTeste.tiles);
     renderizarObjetos();
-
-    checkCollision(militar);
-    militar.update();
+    checkCollision(militar, mapaTeste);
+    updateCam(militar, mapaTeste);
     drawArma(testArma, CONTEXT, [ mouseX, mouseY ]);
+    militar.update();
     updateTiro(tirosNoAr, CONTEXT);
+    CONTEXT.restore();
 }
