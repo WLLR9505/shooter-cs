@@ -73,8 +73,8 @@ function checkKeys () {
 }
 
 function onMouseMove (e) {
-    mouseX = e.clientX - THECANVAS.offsetLeft;
-    mouseY = e.clientY - THECANVAS.offsetTop;
+    mouseX = e.clientX + Math.ceil(cam.x);
+    mouseY = e.clientY + Math.ceil(cam.y);
 }
 
 function gameLoop () {
