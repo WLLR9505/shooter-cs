@@ -11,11 +11,53 @@ const ANDADADO_D_COSTAS = 7;
 const ANDANDO_D_ESQUERDA = 8;
 const ANDANDO_D_DIREITA = 9;
 
+const USAVEIS = [ 'MOCHILA', 'MUNICAO' ]	//lista de objetos usaveis
+
+class Mochila {
+	nEspacos: number;
+	slot: any[];
+	img: HTMLImageElement;
+	tipo: string;
+	sprite: I_sprites;
+	constructor (nEspacos, imgSRC) {
+		this.slot = new Array();
+		this.img = new Image;
+		this.img.src = imgSRC;
+		this.tipo = 'MOCHILA';
+		this.sprite = null;
+		this.nEspacos = nEspacos;
+	}
+	guardar (obj) {
+		if (this.slot.length < this.nEspacos) {	//se tiver espaço
+			this.slot.unshift(obj);
+			this.nEspacos--;
+		} else {
+			console.log('mochila cheia');
+		}
+	}
+}
+
+interface Corpo {
+	maoD : any;
+	maoE : any;
+	torax : any;
+	costas : any;
+	cabeca : any;
+};
+
+var corpoNULL : Corpo  = {
+	maoD: null,
+	maoE: null,
+	torax: null,
+	costas: null,
+	cabeca: null
+};
 
 class Personagem {
 	nome: any;
 	velocidade: any;
 	energia: any;
+	corpo : Corpo;
 	arma: any;
     vida: number[];
 	sprites: I_sprites;
@@ -25,7 +67,7 @@ class Personagem {
         this.velocidade = velocidade;
         this.energia = energia;
         this.vida = vida;
-        this.arma = null;
+		this.corpo =  corpoNULL;
         this.sprites = Sprites(spriteParams);
         this.postura = 5;    //parado desarmado
     }
@@ -35,21 +77,76 @@ class Personagem {
     agir (modo) { // 1 : primario 2 : secundario
         switch (modo) {
             case 1:
-                this.arma.atirar();
+                this.corpo.maoD.atirar();
                 break;
             case 2:
-                this.arma.especial();
+                if (this.corpo.maoD.attachment[3].atirar() == false) {
+					this.recarregarArma(this.corpo.maoD.attachment[3]);
+				};
                 break;
         }
     }
     equipar (arma) {
-        if (this.arma == null) {
-            this.arma = arma;
-            this.arma.anatomia.pArma[0] = this.sprites.posX + 20;
-            this.arma.anatomia.pArma[1] = this.sprites.posY + 45;
+        if (this.corpo.maoD == null) {
+            this.corpo.maoD = arma;
+            this.corpo.maoD.anatomia.pArma[0] = this.sprites.posX + 20;
+            this.corpo.maoD.anatomia.pArma[1] = this.sprites.posY + 45;
             this.postura -= 5;   //todos os posturas armados sao (desarmado - 5)
         }
     }
+	usar (obj) {
+		if (USAVEIS.includes(obj.tipo)) {
+			switch (obj.tipo) {
+				case 'MOCHILA':
+				this.corpo.costas = obj;
+				return true;
+				case 'MUNICAO':
+					if (this.guardar(obj)) {
+						return true;
+					}
+			}
+		}
+	}
+	guardar (obj) {
+		try {
+			this.corpo.costas.guardar(obj);
+			return true;
+		} catch {
+			console.log('não tem inventário');
+		}
+	}
+	recarregarArma(arma = this.corpo.maoD) {
+		let pente : number = 0;
+		if (arma.pente[0] ==  arma.pente[2]) {
+			//se o atual for igual ao limite não recarrega
+			return true;
+		}
+		if (this.corpo.costas == null) {
+			return false;
+		}
+		for (let i = 0; i < this.corpo.costas.slot.length; i++) {
+			if (this.corpo.costas.slot[i].compatibilidade == arma.categoria) {
+				//procura no inventario municao da categoria da arma atual
+
+				//remove a munição do inventario de acordo com o limite do pente
+
+				// nBalas = limite - atual
+				pente = arma.pente[2] - arma.pente[0];
+				//desconta do total o quanto irá carregar
+
+				if (pente > this.corpo.costas.slot[i].qtde) {	//se precisa de mais balas do que tem
+				pente = this.corpo.costas.slot[i].qtde;
+				this.corpo.costas.slot[i].qtde = 0
+				} else {
+					this.corpo.costas.slot[i].qtde -= pente;
+				}
+				//atualiza o total de balas dessa arma
+				arma.pente[1] = this.corpo.costas.slot[i].qtde;
+				arma.recarregar(pente);
+				return true;
+			}
+		}
+	}
     andar (direcao, v) {
         if (direcao == 'c') {
             this.postura = postura(this, ANDADADO_D_COSTAS);
@@ -104,11 +201,11 @@ class Personagem {
         }
 
         function renderArma (pers) {
-            if (pers.arma != null) {
-                pers.arma.anatomia.pArma[0] = pers.sprites.posX + 20;
-                pers.arma.anatomia.pArma[1] = pers.sprites.posY + 45;
+            if (pers.corpo.maoD != null) {
+                pers.corpo.maoD.anatomia.pArma[0] = pers.sprites.posX + 20;
+                pers.corpo.maoD.anatomia.pArma[1] = pers.sprites.posY + 45;
 
-                drawArma(pers.arma, CONTEXT, [ mouseX, mouseY ]);
+                drawArma(pers.corpo.maoD, CONTEXT, [ mouseX, mouseY ]);
                 return pers;
             }
         }
@@ -131,7 +228,7 @@ class Personagem {
 
 function postura (pers, e) {
     //uso: a considerar postura desarmada, ja que a postura armada é a desarmada - 5
-    if (pers.arma == null) { //desarmado
+    if (pers.corpo.maoD == null) { //desarmado
         return e;
     } else {
         return e - 5;

@@ -1,3 +1,5 @@
+var delay = 0;
+
 enum tipo_Anexo {
     MIRA,
     PENTE,
@@ -5,12 +7,45 @@ enum tipo_Anexo {
     ESPECIAL
 }
 
+const CATEGORIA_PISTOLA = 0;
+const CATEGORIA_SHOTGUN = 1;
+const CATEGORIA_SUB = 2;
+const CATEGORIA_FUZIL = 3 ;
+const CATEGORIA_SNIPER = 4 ;
+
+var balaPistola = new Image();
+balaPistola.src = './resources/armas/bala_pistola.png';
+
+var balaFuzil = new Image();
+balaFuzil.src = './resources/armas/bala_fuzil.png';
+
+const BALAS = [
+    ['PISTOLA', balaPistola],
+    ['SHOTGUN', balaPistola],
+    ['SUB', balaPistola],
+    ['FUZIL', balaFuzil],
+    ['SNIPER', balaFuzil]
+];
+
+class Municao {
+	qtde: number;
+    sprite : I_sprites;
+    compatibilidade : string;
+    tipo : string;
+    constructor (qtde, tipo, compatibilidade, sprite) {
+        this.qtde = qtde;
+        this.tipo = tipo;
+        this.compatibilidade = compatibilidade
+        this.sprite = sprite;
+    }
+}
+
 class Anexo {
     nome: string;
     tipo: any;
-	extra: any;
+    extra: any;
     img: HTMLImageElement;
-    constructor (nome, tipo, imgNome, extra) {
+    constructor(nome, tipo, imgNome, extra) {
         this.nome = nome;
         this.tipo = tipo;
         this.extra = extra;
@@ -24,8 +59,8 @@ class Anexo {
 class Mira {
     nome: string;
     img: HTMLImageElement;
-	atcImg: HTMLImageElement;
-    constructor (nome, imgNome, atcImgNome?) {
+    atcImg: HTMLImageElement;
+    constructor(nome, imgNome, atcImgNome?) {
         //último parámetro caso a mira possa ser equipada na arma
         this.nome = nome;
         this.img = new Image();
@@ -38,35 +73,58 @@ class Mira {
 }
 
 class Weapon {
+	categoria: any;
     nome: string;
     alcance: any;
     precisao: any;
     velocidadeTiro: any;
+    taxaTiros: any; //quanto menor mais rapida a sequencia de tiros
+    //1~2: metralhadoras pesadas
+    // 3~10: fuzis
+    // 10~15: pistolas
+    // 15~^: shotguns
     attachment: any[];
-	img: HTMLImageElement;
+    pente: [number, number, number]; //atual/total/limite pente
+    img: HTMLImageElement;
     anatomia: {};
     tipo: any;
-    constructor (nome, alcance, precisao, velocidadeTiro, nAttachment, imgNome, anatomia = {}, tipo?) {
+    constructor(nome, pente, alcance, precisao, velocidadeTiro, taxaTiros, nAttachment, imgNome, anatomia = {}, categoria, tipo?) {
         this.nome = nome;
+        this.pente = pente;
         this.alcance = alcance;
         this.precisao = precisao; // 0 ~ 10 quanto menor, maior a precisao
         this.velocidadeTiro = velocidadeTiro;   // 2 ~ 5
+        this.taxaTiros = taxaTiros;
         this.attachment = new Array(nAttachment);
         this.attachment[0] = atc_miraComum;
         this.img = new Image();
         this.img.src = './resources/armas/' + imgNome;
         this.anatomia = anatomia;
+        this.categoria = categoria;
         this.tipo = tipo || null;   //caso possa ser usada como anexo
     }
-    atirar () {
-        drawTiro(balaFuzil, this, tirosNoAr, [ mouseX, mouseY ], CONTEXT);
-    }
-    especial () {
-        if (this.attachment[3] != undefined) {
-            drawTiro(balaPistola, this.attachment[3], tirosNoAr, [ mouseX, mouseY ], CONTEXT);
+    atirar() {
+        if (this.pente[0] > 0) {    //se o pente atual tiver balas
+            if (delay == 0) {
+                drawTiro(BALAS[this.categoria][1], this, tirosNoAr, [mouseX, mouseY], CONTEXT);
+                this.pente[0] -= 1;
+                delay = this.taxaTiros;
+            } else {
+                delay--;
+                if (delay < 0) {    //impede que o delay fique negativo caso tenha segunda arma
+                    delay = 0;
+                }
+            }
+        } else {
+            // this.recarregar(pente)
+            console.log('sem municao ::');
+            return false;
         }
     }
-    ConectarAnexo (attachment) {
+    recarregar(pente: number) {
+        this.pente[0] += pente;
+    }
+    ConectarAnexo(attachment) {
         switch (attachment.tipo) {
             case tipo_Anexo.MIRA:
                 this.attachment[0] = attachment;
@@ -89,18 +147,9 @@ class Weapon {
     }
 }
 
+var angulo = 0, x = 100, y = 150;
 
-var angulo = 0,
-    x = 100,
-    y = 150;
-
-var balaPistola = new Image();
-balaPistola.src = './resources/armas/bala_pistola.png';
-
-var balaFuzil = new Image();
-balaFuzil.src = './resources/armas/bala_fuzil.png';
-
-function drawArma (arma, CONTEXT, XY = [ 2 ]) {
+function drawArma(arma, CONTEXT, XY = [2]) {
 
     // angulo = rotacao * Math.PI / 180;
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
@@ -133,9 +182,9 @@ function drawArma (arma, CONTEXT, XY = [ 2 ]) {
     CONTEXT.drawImage(arma.attachment[0].extra.img, pMiraX, pMiraY);
 }
 
-function updateTiro (tirosNoAr, CONTEXT) {
+function updateTiro(tirosNoAr, CONTEXT) {
     //atualiza a posição dos tiros que já foram disparados
-    if(tirosNoAr.length == 0) {
+    if (tirosNoAr.length == 0) {
         return;
     }
     for (var i = 0; i < tirosNoAr.length; i++) {
@@ -159,7 +208,7 @@ function updateTiro (tirosNoAr, CONTEXT) {
             if (block(tirosNoAr[i], objColisao[i2])) {
                 tirosNoAr.shift();
                 console.log('tiro removido por colisao');
-                if(tirosNoAr.length == 0) {
+                if (tirosNoAr.length == 0) {
                     break;
                 }
             }
@@ -167,7 +216,7 @@ function updateTiro (tirosNoAr, CONTEXT) {
     }
 }
 
-function drawTiro (bala, arma, tirosNoAr = [], XY = [ 2 ], CONTEXT) {
+function drawTiro(bala, arma, tirosNoAr = [], XY = [2], CONTEXT) {
     console.log('tiro');
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]) * 180 / Math.PI;
     angulo += RandomNumber(-arma.precisao, +arma.precisao);
@@ -195,4 +244,26 @@ function drawTiro (bala, arma, tirosNoAr = [], XY = [ 2 ], CONTEXT) {
     CONTEXT.rotate(anguloBala);
     CONTEXT.drawImage(bala, tiro.posX, tiro.posY);
     CONTEXT.restore();
+}
+
+function statusMunicao(personagem: any, THECANVAS, CONTEXT) {
+    if (personagem.corpo.maoD || null) {
+        let atual = personagem.corpo.maoD.pente[0];
+        let total = personagem.corpo.maoD.pente[1];
+        let max = personagem.corpo.maoD.pente[2];
+        CONTEXT.fillStyle = '#000000';
+        CONTEXT.font = '20px consolas';
+        CONTEXT.textBaseline = 'top';
+        CONTEXT.fillText(atual + '/' + total, 5, 50);
+
+        if (personagem.corpo.maoD.attachment[3] != null) {
+            atual = personagem.corpo.maoD.attachment[3].pente[0];
+            total = personagem.corpo.maoD.attachment[3].pente[1];
+            max = personagem.corpo.maoD.attachment[3].pente[2];
+            CONTEXT.fillStyle = '#000000';
+            CONTEXT.font = '15px consolas';
+            CONTEXT.textBaseline = 'top';
+            CONTEXT.fillText(atual + '/' + total, 5, 70);
+        }
+    }
 }

@@ -1,7 +1,7 @@
 const FPS = 30;
 const ARMA_TESTE = fuzil1;
 var intervalTime = 1000 / FPS;
-var mouseX, mouseY, mouseCode,
+var e, mouseX, mouseY, mouseCode,
     v = 3;
 var tirosNoAr = new Array(0);
 var keyPressList = [];
@@ -11,25 +11,15 @@ window.addEventListener('load', function () {
 
 THECANVAS.addEventListener('mousemove', onMouseMove);
 
-window.onmouseup = function (e) {
+window.onmousedown = function (e) {
     if (typeof e == 'object') {
         mouseCode = e.button;
+    }
+};
 
-        switch (mouseCode) {
-            case 0:
-                console.log('L click');
-                militar.agir(1);
-                break;
-            case 1:
-                console.log('Middle click');
-                break;
-            case 2:
-                console.log('R click');
-                militar.agir(2);
-                break;
-            default:
-                console.log('?? ' + mouseCode);
-        }
+window.onmouseup = function (e) {
+    if (typeof e == 'object') {
+        mouseCode = undefined;
     }
 };
 
@@ -48,6 +38,10 @@ function checkKeys () {
         v = militar.velocidade;
     } else {
         v = 3;
+    }
+
+    if (keyPressList[82]) {
+        militar.recarregarArma();
     }
 
     if (keyPressList[65]) { //A
@@ -69,6 +63,19 @@ function checkKeys () {
         militar.andar('c', v);
     } else {
         militar.postura = postura(militar, PARADO_D);
+    }
+
+    switch (mouseCode) {
+        case 0:
+            militar.agir(1);
+            break;
+        case 1:
+            console.log('Middle click');
+            break;
+        case 2:
+            console.log('R click');
+            militar.agir(2);
+            break;
     }
 }
 
@@ -118,27 +125,32 @@ var mesa2 = Sprites(
         image: MESA,
         width: 90,
         height: 91,
-        posX: 100,
-        posY: 170
+        posX: 300,
+        posY: 300
     });
 objColisao.push(mesa);
-// objColisao.push(mesa2);
+objColisao.push(mesa2);
+itens.push(mochila_C);
+itens.push(municao_FUZIL);
+itens.push(municao_SUB);
 
-var testArma = FMA;
-testArma.ConectarAnexo(SMMA);
-testArma.ConectarAnexo(atc_miraPontoVermelho);
+var testArma = FMB;
+testArma.ConectarAnexo(SMMB);
+testArma.ConectarAnexo(atc_miraTatica);
 militar.equipar(testArma);
 
 function drawScreen () {
     CONTEXT.clearRect(0,0,THECANVAS.width,THECANVAS.height);
     CONTEXT.save();
+
     CONTEXT.translate(-cam.x, -cam.y);
     renderizarMapa(mapaTeste.tiles);
     renderizarObjetos();
     checkCollision(militar, mapaTeste);
     updateCam(militar, mapaTeste);
-    drawArma(testArma, CONTEXT, [ mouseX, mouseY ]);
     militar.update();
     updateTiro(tirosNoAr, CONTEXT);
+
     CONTEXT.restore();
+    statusMunicao(militar, THECANVAS, CONTEXT);
 }

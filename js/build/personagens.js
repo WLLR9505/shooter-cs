@@ -8,13 +8,41 @@ const ANDANDO_D_FRENTE = 6;
 const ANDADADO_D_COSTAS = 7;
 const ANDANDO_D_ESQUERDA = 8;
 const ANDANDO_D_DIREITA = 9;
+const USAVEIS = ['MOCHILA', 'MUNICAO'];
+class Mochila {
+    constructor(nEspacos, imgSRC) {
+        this.slot = new Array();
+        this.img = new Image;
+        this.img.src = imgSRC;
+        this.tipo = 'MOCHILA';
+        this.sprite = null;
+        this.nEspacos = nEspacos;
+    }
+    guardar(obj) {
+        if (this.slot.length < this.nEspacos) {
+            this.slot.unshift(obj);
+            this.nEspacos--;
+        }
+        else {
+            console.log('mochila cheia');
+        }
+    }
+}
+;
+var corpoNULL = {
+    maoD: null,
+    maoE: null,
+    torax: null,
+    costas: null,
+    cabeca: null
+};
 class Personagem {
     constructor(nome, velocidade, energia, vida = [2], spriteParams) {
         this.nome = nome;
         this.velocidade = velocidade;
         this.energia = energia;
         this.vida = vida;
-        this.arma = null;
+        this.corpo = corpoNULL;
         this.sprites = Sprites(spriteParams);
         this.postura = 5;
     }
@@ -24,19 +52,68 @@ class Personagem {
     agir(modo) {
         switch (modo) {
             case 1:
-                this.arma.atirar();
+                this.corpo.maoD.atirar();
                 break;
             case 2:
-                this.arma.especial();
+                if (this.corpo.maoD.attachment[3].atirar() == false) {
+                    this.recarregarArma(this.corpo.maoD.attachment[3]);
+                }
+                ;
                 break;
         }
     }
     equipar(arma) {
-        if (this.arma == null) {
-            this.arma = arma;
-            this.arma.anatomia.pArma[0] = this.sprites.posX + 20;
-            this.arma.anatomia.pArma[1] = this.sprites.posY + 45;
+        if (this.corpo.maoD == null) {
+            this.corpo.maoD = arma;
+            this.corpo.maoD.anatomia.pArma[0] = this.sprites.posX + 20;
+            this.corpo.maoD.anatomia.pArma[1] = this.sprites.posY + 45;
             this.postura -= 5;
+        }
+    }
+    usar(obj) {
+        if (USAVEIS.includes(obj.tipo)) {
+            switch (obj.tipo) {
+                case 'MOCHILA':
+                    this.corpo.costas = obj;
+                    return true;
+                case 'MUNICAO':
+                    if (this.guardar(obj)) {
+                        return true;
+                    }
+            }
+        }
+    }
+    guardar(obj) {
+        try {
+            this.corpo.costas.guardar(obj);
+            return true;
+        }
+        catch (_a) {
+            console.log('não tem inventário');
+        }
+    }
+    recarregarArma(arma = this.corpo.maoD) {
+        let pente = 0;
+        if (arma.pente[0] == arma.pente[2]) {
+            return true;
+        }
+        if (this.corpo.costas == null) {
+            return false;
+        }
+        for (let i = 0; i < this.corpo.costas.slot.length; i++) {
+            if (this.corpo.costas.slot[i].compatibilidade == arma.categoria) {
+                pente = arma.pente[2] - arma.pente[0];
+                if (pente > this.corpo.costas.slot[i].qtde) {
+                    pente = this.corpo.costas.slot[i].qtde;
+                    this.corpo.costas.slot[i].qtde = 0;
+                }
+                else {
+                    this.corpo.costas.slot[i].qtde -= pente;
+                }
+                arma.pente[1] = this.corpo.costas.slot[i].qtde;
+                arma.recarregar(pente);
+                return true;
+            }
         }
     }
     andar(direcao, v) {
@@ -86,10 +163,10 @@ class Personagem {
             }
         }
         function renderArma(pers) {
-            if (pers.arma != null) {
-                pers.arma.anatomia.pArma[0] = pers.sprites.posX + 20;
-                pers.arma.anatomia.pArma[1] = pers.sprites.posY + 45;
-                drawArma(pers.arma, CONTEXT, [mouseX, mouseY]);
+            if (pers.corpo.maoD != null) {
+                pers.corpo.maoD.anatomia.pArma[0] = pers.sprites.posX + 20;
+                pers.corpo.maoD.anatomia.pArma[1] = pers.sprites.posY + 45;
+                drawArma(pers.corpo.maoD, CONTEXT, [mouseX, mouseY]);
                 return pers;
             }
         }
@@ -108,7 +185,7 @@ class Personagem {
     }
 }
 function postura(pers, e) {
-    if (pers.arma == null) {
+    if (pers.corpo.maoD == null) {
         return e;
     }
     else {

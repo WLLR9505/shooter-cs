@@ -1,4 +1,5 @@
 var objColisao = new Array(0);
+var itens = new Array(0);
 
 interface I_sprites {
     quadro : number;
@@ -105,11 +106,13 @@ function renderizarMapa (mapa) {
 }
 
 function renderizarObjetos () {
-    for (var i = 0; i < objColisao.length; i++) {
+    for (let i = 0; i < objColisao.length; i++) {
         objColisao[i].render(objColisao[i].posX, objColisao[i].posY, 0);
     }
+    for (let i = 0; i < itens.length; i++) {
+        itens[i].sprite.render(itens[i].sprite.posX, itens[i].sprite.posY, 0);
+    }
 }
-
 
 function block (obj1, obj2) {
     //se inverter a ordem so parametros = empurrar
@@ -174,6 +177,17 @@ function checkCollision (player, mapa) {
     for (let i = 0; i < objColisao.length; i++) {
         block(player.sprites, objColisao[i]);
     }
+    for (let i = 0; i < itens.length; i++) {
+        if (block(player.sprites, itens[i].sprite)) {
+            if (mouseCode == 1 || keyPressList[69]) {
+                if (player.usar(itens[i])) {
+                    itens = RemoveFromArray(itens, [itens[i]]);
+                } else {
+                    console.log('não coonseguiu pegar');
+                }
+            }
+        }
+    }
 }
 
 
@@ -218,4 +232,18 @@ function updateCam(player, mapa) {
 
 function RandomNumber (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function RemoveFromArray(arr , forDeletion) {
+    return arr = arr.filter(item => !forDeletion.includes(item));
+}
+
+function moveValue(from, value) {
+    if (value > from) { //se tenta mover um valor maior que o disponivel
+        from = 0;
+        return from;
+    } else {
+        from -= value;
+        return value;
+    }
 }

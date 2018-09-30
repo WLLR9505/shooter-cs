@@ -1,3 +1,4 @@
+var delay = 0;
 var tipo_Anexo;
 (function (tipo_Anexo) {
     tipo_Anexo[tipo_Anexo["MIRA"] = 0] = "MIRA";
@@ -5,6 +6,30 @@ var tipo_Anexo;
     tipo_Anexo[tipo_Anexo["CANO"] = 2] = "CANO";
     tipo_Anexo[tipo_Anexo["ESPECIAL"] = 3] = "ESPECIAL";
 })(tipo_Anexo || (tipo_Anexo = {}));
+const CATEGORIA_PISTOLA = 0;
+const CATEGORIA_SHOTGUN = 1;
+const CATEGORIA_SUB = 2;
+const CATEGORIA_FUZIL = 3;
+const CATEGORIA_SNIPER = 4;
+var balaPistola = new Image();
+balaPistola.src = './resources/armas/bala_pistola.png';
+var balaFuzil = new Image();
+balaFuzil.src = './resources/armas/bala_fuzil.png';
+const BALAS = [
+    ['PISTOLA', balaPistola],
+    ['SHOTGUN', balaPistola],
+    ['SUB', balaPistola],
+    ['FUZIL', balaFuzil],
+    ['SNIPER', balaFuzil]
+];
+class Municao {
+    constructor(qtde, tipo, compatibilidade, sprite) {
+        this.qtde = qtde;
+        this.tipo = tipo;
+        this.compatibilidade = compatibilidade;
+        this.sprite = sprite;
+    }
+}
 class Anexo {
     constructor(nome, tipo, imgNome, extra) {
         this.nome = nome;
@@ -28,25 +53,42 @@ class Mira {
     }
 }
 class Weapon {
-    constructor(nome, alcance, precisao, velocidadeTiro, nAttachment, imgNome, anatomia = {}, tipo) {
+    constructor(nome, pente, alcance, precisao, velocidadeTiro, taxaTiros, nAttachment, imgNome, anatomia = {}, categoria, tipo) {
         this.nome = nome;
+        this.pente = pente;
         this.alcance = alcance;
         this.precisao = precisao;
         this.velocidadeTiro = velocidadeTiro;
+        this.taxaTiros = taxaTiros;
         this.attachment = new Array(nAttachment);
         this.attachment[0] = atc_miraComum;
         this.img = new Image();
         this.img.src = './resources/armas/' + imgNome;
         this.anatomia = anatomia;
+        this.categoria = categoria;
         this.tipo = tipo || null;
     }
     atirar() {
-        drawTiro(balaFuzil, this, tirosNoAr, [mouseX, mouseY], CONTEXT);
-    }
-    especial() {
-        if (this.attachment[3] != undefined) {
-            drawTiro(balaPistola, this.attachment[3], tirosNoAr, [mouseX, mouseY], CONTEXT);
+        if (this.pente[0] > 0) {
+            if (delay == 0) {
+                drawTiro(BALAS[this.categoria][1], this, tirosNoAr, [mouseX, mouseY], CONTEXT);
+                this.pente[0] -= 1;
+                delay = this.taxaTiros;
+            }
+            else {
+                delay--;
+                if (delay < 0) {
+                    delay = 0;
+                }
+            }
         }
+        else {
+            console.log('sem municao ::');
+            return false;
+        }
+    }
+    recarregar(pente) {
+        this.pente[0] += pente;
     }
     ConectarAnexo(attachment) {
         switch (attachment.tipo) {
@@ -71,10 +113,6 @@ class Weapon {
     }
 }
 var angulo = 0, x = 100, y = 150;
-var balaPistola = new Image();
-balaPistola.src = './resources/armas/bala_pistola.png';
-var balaFuzil = new Image();
-balaFuzil.src = './resources/armas/bala_fuzil.png';
 function drawArma(arma, CONTEXT, XY = [2]) {
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
     CONTEXT.save();
@@ -151,5 +189,25 @@ function drawTiro(bala, arma, tirosNoAr = [], XY = [2], CONTEXT) {
     CONTEXT.rotate(anguloBala);
     CONTEXT.drawImage(bala, tiro.posX, tiro.posY);
     CONTEXT.restore();
+}
+function statusMunicao(personagem, THECANVAS, CONTEXT) {
+    if (personagem.corpo.maoD || null) {
+        let atual = personagem.corpo.maoD.pente[0];
+        let total = personagem.corpo.maoD.pente[1];
+        let max = personagem.corpo.maoD.pente[2];
+        CONTEXT.fillStyle = '#000000';
+        CONTEXT.font = '20px consolas';
+        CONTEXT.textBaseline = 'top';
+        CONTEXT.fillText(atual + '/' + total, 5, 50);
+        if (personagem.corpo.maoD.attachment[3] != null) {
+            atual = personagem.corpo.maoD.attachment[3].pente[0];
+            total = personagem.corpo.maoD.attachment[3].pente[1];
+            max = personagem.corpo.maoD.attachment[3].pente[2];
+            CONTEXT.fillStyle = '#000000';
+            CONTEXT.font = '15px consolas';
+            CONTEXT.textBaseline = 'top';
+            CONTEXT.fillText(atual + '/' + total, 5, 70);
+        }
+    }
 }
 //# sourceMappingURL=armas.js.map

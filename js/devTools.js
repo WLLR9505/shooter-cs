@@ -36,14 +36,22 @@ function drawMousePosition (CONTEXT, mouseX, mouseY) {
     CONTEXT.fillText('x ' + mouseX + '  y ' + mouseY, 5, 20);
 }
 
-function inspect(dado) {
+function inspect (dado) {
     CONTEXT.fillStyle = '#ffffff';
     CONTEXT.font = '10px consolas';
     CONTEXT.textBaseline = 'top';
-    CONTEXT.fillText('inspecionando:' + dado, 5, 40);
+    CONTEXT.fillText('inspecionando:' + dado, 5, 100);
+}
+
+function drawCamPosition () {
+    CONTEXT.fillStyle = '#ffffff';
+    CONTEXT.font = '14px consolas';
+    CONTEXT.textBaseline = 'top';
+    CONTEXT.fillText('CAMERA :: x ' + cam.x + '  y ' + cam.y, 5, 35);
 }
 
 function devInfo (THECANVAS, CONTEXT, mouseX, mouseY) {
     drawFPS(THECANVAS, CONTEXT);
     drawMousePosition(CONTEXT, mouseX, mouseY);
+    drawCamPosition(CONTEXT);
 }
