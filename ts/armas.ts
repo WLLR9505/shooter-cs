@@ -58,11 +58,13 @@ class Anexo {
 
 class Mira {
     nome: string;
+    mod: Number; //modificador de alcance
     img: HTMLImageElement;
     atcImg: HTMLImageElement;
-    constructor(nome, imgNome, atcImgNome?) {
+    constructor(nome, mod, imgNome, atcImgNome?) {
         //último parámetro caso a mira possa ser equipada na arma
         this.nome = nome;
+        this.mod = mod;
         this.img = new Image();
         this.img.src = './resources/armas/attachments/' + imgNome;
         if (atcImgNome != undefined) {
@@ -128,6 +130,7 @@ class Weapon {
         switch (attachment.tipo) {
             case tipo_Anexo.MIRA:
                 this.attachment[0] = attachment;
+                this.alcance += attachment.extra.mod;
                 break;
             case tipo_Anexo.PENTE:
                 this.attachment[1] = attachment;

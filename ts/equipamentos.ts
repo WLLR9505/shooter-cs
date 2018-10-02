@@ -70,22 +70,22 @@ var SMMB = new Weapon('SMM-B', [0, 0, 20], 35, 3, 5, 4.5, 2, 'smm-b.png',
 
 // --------------- MIRAS
 
-var miraComum = new Mira('Mira Comum', 'mira_comum.png');
+var miraComum = new Mira('Mira Comum', 0, 'mira_comum.png');
 var atc_miraComum = new Anexo('Mira Comum', tipo_Anexo.MIRA, undefined, miraComum);
 
-var miraPontoVermelho = new Mira('Ponto Vermelho', 'mira_ponto_vermelho.png', 'atc_ponto_vermelho.png');
+var miraPontoVermelho = new Mira('Ponto Vermelho', 1, 'mira_ponto_vermelho.png', 'atc_ponto_vermelho.png');
 var atc_miraPontoVermelho = new Anexo('Ponto Vermelho', tipo_Anexo.MIRA, undefined, miraPontoVermelho);
 
-var miraTatica = new Mira('Mira Tatica', 'mira_tatica.png', 'atc_tatica.png');
+var miraTatica = new Mira('Mira Tatica', 1, 'mira_tatica.png', 'atc_tatica.png');
 var atc_miraTatica = new Anexo('Mira Tatica', tipo_Anexo.MIRA, undefined, miraTatica);
 
-var mira2 = new Mira('Luneta 2x', 'mira_tatica.png', 'atc_luneta_2x.png');
+var mira2 = new Mira('Luneta 2x', 2, 'mira_tatica.png', 'atc_luneta_2x.png');
 var atc_luneta2 = new Anexo('Luneta 2x', tipo_Anexo.MIRA, undefined, mira2);
 
-var mira4 = new Mira('Luneta 4x', 'mira_tatica.png', 'atc_luneta_4x.png');
+var mira4 = new Mira('Luneta 4x', 4,'mira_tatica.png', 'atc_luneta_4x.png');
 var atc_luneta4 = new Anexo('Luneta 4x', tipo_Anexo.MIRA, undefined, mira4);
 
-var mira8 = new Mira('Luneta 8x', 'mira_tatica.png', 'atc_luneta_8x.png');
+var mira8 = new Mira('Luneta 8x', 8,'mira_tatica.png', 'atc_luneta_8x.png');
 var atc_luneta8 = new Anexo('Luneta 8x', tipo_Anexo.MIRA, undefined, mira8);
 
 // --------------- ANEXOS
