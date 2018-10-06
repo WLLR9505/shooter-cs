@@ -80,9 +80,13 @@ class Personagem {
                 this.corpo.maoD.atirar();
                 break;
             case 2:
-                if (this.corpo.maoD.attachment[3].atirar() == false) {
-					this.recarregarArma(this.corpo.maoD.attachment[3]);
-				};
+				try {
+                	if (this.corpo.maoD.attachment[3].atirar() == false) {
+						this.recarregarArma(this.corpo.maoD.attachment[3]);
+					};
+				} catch {
+					return false;
+				}
                 break;
         }
     }

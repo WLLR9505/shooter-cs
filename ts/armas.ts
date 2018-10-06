@@ -151,9 +151,9 @@ class Weapon {
 }
 
 var angulo = 0, x = 100, y = 150;
+let miraMouse;
 
 function drawArma(arma, CONTEXT, XY = [2]) {
-
     // angulo = rotacao * Math.PI / 180;
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
     CONTEXT.save(); //para as alterações não afetarem nada até o restore()
@@ -165,8 +165,14 @@ function drawArma(arma, CONTEXT, XY = [2]) {
         CONTEXT.scale(1, -1);   //caso a mira esteja a esquerda da arma
     }
     CONTEXT.drawImage(arma.img, -arma.anatomia.pMao[0], -arma.anatomia.pMao[1]);  //o eixo da arma quando girada é o cabo da mesma
-    if (arma.attachment[0].extra.atcImg != undefined) {
+    if (arma.attachment[0] != undefined) {
+
         CONTEXT.drawImage(arma.attachment[0].extra.atcImg, arma.anatomia.pATCMira[0], -arma.anatomia.pATCMira[1]);
+        XY[0] -= arma.attachment[0].extra.img.width;
+        XY[1] -= arma.attachment[0].extra.img.height;
+        miraMouse = arma.attachment[0];
+    } else {
+        miraMouse = atc_miraComum;
     }
 
     if (arma.attachment[2] != undefined) {
@@ -178,11 +184,11 @@ function drawArma(arma, CONTEXT, XY = [2]) {
     }
 
     CONTEXT.restore();
-    let pMiraX = XY[0] - arma.attachment[0].extra.img.width;
-    let pMiraY = XY[1] - arma.attachment[0].extra.img.height;
+    let pMiraX = XY[0];
+    let pMiraY = XY[1];
 
     //desenha mira da arma
-    CONTEXT.drawImage(arma.attachment[0].extra.img, pMiraX, pMiraY);
+    CONTEXT.drawImage(miraMouse.extra.img, pMiraX, pMiraY);
 }
 
 function updateTiro(tirosNoAr, CONTEXT) {

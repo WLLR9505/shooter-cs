@@ -115,6 +115,7 @@ class Weapon {
     }
 }
 var angulo = 0, x = 100, y = 150;
+let miraMouse;
 function drawArma(arma, CONTEXT, XY = [2]) {
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
     CONTEXT.save();
@@ -124,8 +125,14 @@ function drawArma(arma, CONTEXT, XY = [2]) {
         CONTEXT.scale(1, -1);
     }
     CONTEXT.drawImage(arma.img, -arma.anatomia.pMao[0], -arma.anatomia.pMao[1]);
-    if (arma.attachment[0].extra.atcImg != undefined) {
+    if (arma.attachment[0] != undefined) {
         CONTEXT.drawImage(arma.attachment[0].extra.atcImg, arma.anatomia.pATCMira[0], -arma.anatomia.pATCMira[1]);
+        XY[0] -= arma.attachment[0].extra.img.width;
+        XY[1] -= arma.attachment[0].extra.img.height;
+        miraMouse = arma.attachment[0];
+    }
+    else {
+        miraMouse = atc_miraComum;
     }
     if (arma.attachment[2] != undefined) {
         CONTEXT.drawImage(arma.attachment[2].img, arma.anatomia.pATCBase[0], -arma.anatomia.pATCBase[1]);
@@ -134,9 +141,9 @@ function drawArma(arma, CONTEXT, XY = [2]) {
         CONTEXT.drawImage(arma.attachment[3].img, arma.anatomia.pATCEspecial[0], -arma.anatomia.pATCEspecial[1]);
     }
     CONTEXT.restore();
-    let pMiraX = XY[0] - arma.attachment[0].extra.img.width;
-    let pMiraY = XY[1] - arma.attachment[0].extra.img.height;
-    CONTEXT.drawImage(arma.attachment[0].extra.img, pMiraX, pMiraY);
+    let pMiraX = XY[0];
+    let pMiraY = XY[1];
+    CONTEXT.drawImage(miraMouse.extra.img, pMiraX, pMiraY);
 }
 function updateTiro(tirosNoAr, CONTEXT) {
     if (tirosNoAr.length == 0) {
