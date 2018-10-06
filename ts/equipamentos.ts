@@ -12,8 +12,7 @@ var fuzil1 = new Weapon('FZ-1A', [0, 0, 30], 60, 4, 6, 5, 3, 'fuzil_1.png',
         pArma: [0, 0],
         pMao: [25, 12],
         pCano: [57, 6],
-        pATCMira: [0, 15],
-        pATCBase: [20, 2]
+        pATCMira: [0, 13]
     }, CATEGORIA_FUZIL);
 var shotgunCurta = new Weapon('SHT-C', [0, 0, 5], 50, 7, 4.2, 15, 1, 'shotgun_curta.png',
     {
@@ -21,6 +20,7 @@ var shotgunCurta = new Weapon('SHT-C', [0, 0, 5], 50, 7, 4.2, 15, 1, 'shotgun_cu
         pMao: [4, 11],
         pCano: [29, 6],
         pATCMira: [0, 15]
+        pATCBase: [20, 2]
     }, CATEGORIA_SHOTGUN);
 var shotgunLonga = new Weapon('SHT-L', [0, 0, 7], 55, 6, 4.7, 20, 2, 'shotgun_longa.png',
     {
@@ -28,7 +28,7 @@ var shotgunLonga = new Weapon('SHT-L', [0, 0, 7], 55, 6, 4.7, 20, 2, 'shotgun_lo
         pMao: [18, 12],
         pCano: [43, 6],
         pATCMira: [0, 15],
-        pATCBase: [15, 2]
+        pATCBase: [20, 2]
     }, CATEGORIA_SHOTGUN);
 
 var FMA = new Weapon('FM-A', [0, 0, 20], 70, 1, 5, 6, 3, 'fm-a.png',
