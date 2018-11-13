@@ -204,4 +204,6 @@ const MILITAR_SHEET = new Image();
 MILITAR_SHEET.src = './resources/char/militar3P.png';
 const BOT_MILITAR_SHEET = new Image();
 BOT_MILITAR_SHEET.src = './resources/char/militar1P.png';
+const BOT_MILITAR_SHEET2 = new Image();
+BOT_MILITAR_SHEET2.src = './resources/char/militar2P.png';
 //# sourceMappingURL=personagens.js.map

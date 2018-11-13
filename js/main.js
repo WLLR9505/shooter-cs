@@ -4,6 +4,7 @@ var intervalTime = 1000 / FPS;
 var e, mouseX, mouseY, mouseCode,
     v = 3;
 var tirosNoAr = new Array(0);
+var bots = new Array(0);
 var keyPressList = [];
 window.addEventListener('load', function () {
     canvasApp();
@@ -35,57 +36,57 @@ document.onkeyup = function (e) {
 
 function checkKeys () {
     if (keyPressList[16]) { //Shift L
-        v = militar.velocidade;
+        v = player.velocidade;
     } else {
         v = 3;
     }
 
     if (keyPressList[82]) {
-        militar.recarregarArma();
+        player.recarregarArma();
     }
 
     if (keyPressList[81]) {  //Q
-        if (BOT_militar.cerebro.seguir == true) {
-            BOT_militar.cerebro.seguir = false;
+        if (BOT_player.cerebro.seguir == true) {
+            BOT_player.cerebro.seguir = false;
             console.log('UNFOLLOW');
         } else {
-            BOT_militar.cerebro.seguir = true;
+            BOT_player.cerebro.seguir = true;
             console.log('FOLLOW');
         }
         keyPressList[81] = false;
     }
 
     if (keyPressList[65]) { //A
-        militar.andar('e', v);
+        player.andar('e', v);
     } else {
-        militar.postura = postura(militar, PARADO_D);
+        player.postura = postura(player, PARADO_D);
     }
     if (keyPressList[68]) { //D
-        militar.andar('d', v);
+        player.andar('d', v);
     } else {
-        militar.postura = postura(militar, PARADO_D);
+        player.postura = postura(player, PARADO_D);
     }
     if (keyPressList[83]) { //S
-        militar.andar('b', v);
+        player.andar('b', v);
     } else {
-        militar.postura = postura(militar, PARADO_D);
+        player.postura = postura(player, PARADO_D);
     }
     if (keyPressList[87]) { //W
-        militar.andar('c', v);
+        player.andar('c', v);
     } else {
-        militar.postura = postura(militar, PARADO_D);
+        player.postura = postura(player, PARADO_D);
     }
 
     switch (mouseCode) {
         case 0:
-            militar.agir(1);
+            player.agir(1);
             break;
         case 1:
             console.log('Middle click');
             break;
         case 2:
             console.log('R click');
-            militar.agir(2);
+            player.agir(2);
             break;
     }
 }
@@ -106,7 +107,7 @@ function canvasApp () {
     gameLoop();
 }
 
-var BOT_militar = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
+var BOT_player = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
     width: 198,
     height: 930,
     image: BOT_MILITAR_SHEET,
@@ -119,7 +120,20 @@ var BOT_militar = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
     loop: true
 }, [ 100, 100 ]);
 
-var militar = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
+var BOT_player2 = new Bot('Bot Militar 2', 7, 5, [ 10, 10 ], {
+    width: 198,
+    height: 930,
+    image: BOT_MILITAR_SHEET2,
+    context: CONTEXT,
+    TporQuadro: 6,
+    nQuadros: 3,
+    nLinhas: 10,
+    posX: 600,
+    posY: 300,
+    loop: true
+}, [ 100, 100 ]);
+
+var player = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
     width: 198,
     height: 930,
     image: MILITAR_SHEET,
@@ -152,30 +166,51 @@ var mesa2 = Sprites(
         posX: 300,
         posY: 300
     });
-objColisao.push(mesa);
-objColisao.push(mesa2);
-itens.push(mochila_C);
-itens.push(municao_FUZIL);
-itens.push(municao_SUB);
+objColisao.push(mesa, mesa2);
+itens.push(mochila_C, municao_FUZIL, municao_SUB);
+bots.push(BOT_player, BOT_player2);
 
 var testArma = FMB;
 testArma.ConectarAnexo(SMMB);
 testArma.ConectarAnexo(atc_miraTatica);
-militar.equipar(testArma);
+player.equipar(testArma);
 
 function drawScreen () {
     CONTEXT.clearRect(0,0,THECANVAS.width,THECANVAS.height);
     CONTEXT.save();
 
     CONTEXT.translate(-cam.x, -cam.y);
-    renderizarMapa(mapaTeste.tiles);
-    renderizarObjetos();
-    checkCollision(militar, mapaTeste);
-    updateCam(militar, mapaTeste);
-    BOT_militar.update([ mouseX, mouseY ], militar);
-    militar.update();
-    updateTiro(tirosNoAr, CONTEXT);
+
+    renderBackground();
+
+    gameEngine();
+
+    renderMain();
 
     CONTEXT.restore();
-    statusMunicao(militar, THECANVAS, CONTEXT);
+
+    renderInterface();
+}
+
+function renderBackground () {
+    renderizarMapa(mapaTeste.tiles);
+    renderizarObjetos();
+}
+
+function renderMain () {
+    bots.forEach((i) => {
+        i.update([ mouseX, mouseY ], player);
+    }); //update de todos os bots
+
+    player.update();
+    updateTiro(tirosNoAr, CONTEXT);
+}
+
+function gameEngine () {
+    checkCollision(player, mapaTeste);
+    updateCam(player, mapaTeste);
+}
+
+function renderInterface () {
+    statusMunicao(player, THECANVAS, CONTEXT);
 }
