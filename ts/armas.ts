@@ -213,15 +213,21 @@ function updateTiro(tirosNoAr, CONTEXT) {
         CONTEXT.restore();
 
         ///verifica colisão do tiro atual com objetos
-        for (let i2 = 0; i2 < objColisao.length; i2++) {
-            if (block(tirosNoAr[i], objColisao[i2])) {
+
+        objColisao.forEach((obj) => {
+            if (block(tirosNoAr[i], obj)) {
                 tirosNoAr.shift();
-                console.log('tiro removido por colisao');
-                if (tirosNoAr.length == 0) {
-                    break;
-                }
+                console.log('tiro removido :: Colisao');
             }
-        }
+        })
+
+        bots.forEach((b) => {   //bots x balas
+            if (block(tirosNoAr[i], b.sprites)) {
+                b.vida[0] -= 2;
+                tirosNoAr.shift();
+                console.log('tiro removido :: Acertou um bot');
+            }
+        })
     }
 }
 

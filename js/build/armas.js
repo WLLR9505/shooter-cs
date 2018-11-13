@@ -163,15 +163,19 @@ function updateTiro(tirosNoAr, CONTEXT) {
         CONTEXT.rotate(tirosNoAr[i].anguloBala);
         CONTEXT.drawImage(tirosNoAr[i].image, -tirosNoAr[i].width / 2, -tirosNoAr[i].height / 2);
         CONTEXT.restore();
-        for (let i2 = 0; i2 < objColisao.length; i2++) {
-            if (block(tirosNoAr[i], objColisao[i2])) {
+        objColisao.forEach((obj) => {
+            if (block(tirosNoAr[i], obj)) {
                 tirosNoAr.shift();
-                console.log('tiro removido por colisao');
-                if (tirosNoAr.length == 0) {
-                    break;
-                }
+                console.log('tiro removido :: Colisao');
             }
-        }
+        });
+        bots.forEach((b) => {
+            if (block(tirosNoAr[i], b.sprites)) {
+                b.vida[0] -= 2;
+                tirosNoAr.shift();
+                console.log('tiro removido :: Acertou um bot');
+            }
+        });
     }
 }
 function drawTiro(bala, arma, tirosNoAr = [], XY = [2], CONTEXT) {

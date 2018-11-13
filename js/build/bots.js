@@ -60,6 +60,10 @@ class Bot {
     }
     update(alvo, player) {
         IA(player, this);
+        if (this.vida[0] < 1) {
+            console.log(`bot ${this.nome} morreu`);
+            return false;
+        }
         if (alvo[1] < this.sprites.posY) {
             this.postura = postura(this, ANDADADO_D_COSTAS);
         }
@@ -96,6 +100,7 @@ class Bot {
                 bot.IA_seguir(player);
             }
         }
+        return true;
     }
     IA_seguir(alvo) {
         if (this.sprites.posX - 50 >= alvo.sprites.posX) {

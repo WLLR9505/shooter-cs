@@ -199,7 +199,9 @@ function renderBackground () {
 
 function renderMain () {
     bots.forEach((i) => {
-        i.update([ mouseX, mouseY ], player);
+        if (i.update([ mouseX, mouseY ], player) == false) {
+            bots = RemoveFromArray(bots, [ i ]);//se o bot morrer não é mais renderizado
+        }
     }); //update de todos os bots
 
     player.update();
