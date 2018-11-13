@@ -193,21 +193,24 @@ class Personagem {
         this.sprites.render(this.sprites.posX, this.sprites.posY);
     }
     update () {
+		var mod = [30, 60]; //modifica posição da arma de acordo com a direção que olha
         if (mouseY < this.sprites.posY) {
+			mod[0] = 35;
             this.postura = postura(this, ANDADADO_D_COSTAS);
         } else {
             if (mouseX > this.sprites.posX) {    //mira a direita
                 this.postura = postura(this, ANDANDO_D_DIREITA);
             }
             if (mouseX < this.sprites.posX) {
+				mod[0] = 35;
                 this.postura = postura(this, ANDANDO_D_ESQUERDA);
             }
         }
 
         function renderArma (pers) {
             if (pers.corpo.maoD != null) {
-                pers.corpo.maoD.anatomia.pArma[0] = pers.sprites.posX + 20;
-                pers.corpo.maoD.anatomia.pArma[1] = pers.sprites.posY + 45;
+                pers.corpo.maoD.anatomia.pArma[0] = pers.sprites.posX + mod[0];
+                pers.corpo.maoD.anatomia.pArma[1] = pers.sprites.posY + mod[1];
 
                 drawArma(pers.corpo.maoD, CONTEXT, [ mouseX, mouseY ]);
                 return pers;
@@ -240,4 +243,6 @@ function postura (pers, e) {
 }
 
 const MILITAR_SHEET = new Image();
-MILITAR_SHEET.src = './resources/char/char_militar1_sheet.png';
+MILITAR_SHEET.src = './resources/char/militar3P.png';
+const BOT_MILITAR_SHEET = new Image();
+BOT_MILITAR_SHEET.src = './resources/char/militar1P.png';

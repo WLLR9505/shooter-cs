@@ -19,7 +19,7 @@ var shotgunCurta = new Weapon('SHT-C', [0, 0, 5], 50, 7, 4.2, 15, 1, 'shotgun_cu
         pArma: [0, 0],
         pMao: [4, 11],
         pCano: [29, 6],
-        pATCMira: [0, 15]
+        pATCMira: [0, 15],
         pATCBase: [20, 2]
     }, CATEGORIA_SHOTGUN);
 var shotgunLonga = new Weapon('SHT-L', [0, 0, 7], 55, 6, 4.7, 20, 2, 'shotgun_longa.png',

@@ -44,6 +44,17 @@ function checkKeys () {
         militar.recarregarArma();
     }
 
+    if (keyPressList[81]) {  //Q
+        if (BOT_militar.cerebro.seguir == true) {
+            BOT_militar.cerebro.seguir = false;
+            console.log('UNFOLLOW');
+        } else {
+            BOT_militar.cerebro.seguir = true;
+            console.log('FOLLOW');
+        }
+        keyPressList[81] = false;
+    }
+
     if (keyPressList[65]) { //A
         militar.andar('e', v);
     } else {
@@ -95,9 +106,22 @@ function canvasApp () {
     gameLoop();
 }
 
+var BOT_militar = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
+    width: 198,
+    height: 930,
+    image: BOT_MILITAR_SHEET,
+    context: CONTEXT,
+    TporQuadro: 6,
+    nQuadros: 3,
+    nLinhas: 10,
+    posX: 700,
+    posY: 300,
+    loop: true
+}, [ 100, 100 ]);
+
 var militar = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
-    width: 126,
-    height: 630,
+    width: 198,
+    height: 930,
     image: MILITAR_SHEET,
     context: CONTEXT,
     TporQuadro: 6,
@@ -148,6 +172,7 @@ function drawScreen () {
     renderizarObjetos();
     checkCollision(militar, mapaTeste);
     updateCam(militar, mapaTeste);
+    BOT_militar.update([ mouseX, mouseY ], militar);
     militar.update();
     updateTiro(tirosNoAr, CONTEXT);
 
