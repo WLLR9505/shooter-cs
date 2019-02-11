@@ -7,7 +7,21 @@ var corpoNULL : Corpo  = {
 };
 
 var cerebroNULL : Cerebro = {
-    seguir: null
+    seguir: null,
+	matar : null,
+	Mirar : {
+		mirar : false,
+		alvo: { x : 0,
+				y : 0 }
+	}
+};
+
+interface Foco {
+	mirar : boolean,
+	alvo : {
+		x: Number,
+		y: Number
+	}
 };
 
 interface Corpo {
@@ -20,6 +34,8 @@ interface Corpo {
 
 interface Cerebro {
     seguir : boolean;
+	matar : boolean;
+	Mirar : Foco;
 };
 
 class Bot {
@@ -42,6 +58,67 @@ class Bot {
         this.postura = 5;    //parado desarmado
         this.cerebro = Object.assign({}, cerebroNULL);
     }
+	guardar (obj) {
+		try {
+			this.corpo.costas.guardar(obj);
+			return true;
+		} catch {
+			console.log('BOT :: não tem inventário');
+		}
+	}
+	recarregarArma(arma = this.corpo.maoD) {
+		let pente : number = 0;
+		if (arma.pente[0] ==  arma.pente[2]) {
+			//se o atual for igual ao limite não recarrega
+			return true;
+		}
+		if (this.corpo.costas == null) {
+			return false;
+		}
+		for (let i = 0; i < this.corpo.costas.slot.length; i++) {
+			if (this.corpo.costas.slot[i].compatibilidade == arma.categoria) {
+				//procura no inventario municao da categoria da arma atual
+
+				//remove a munição do inventario de acordo com o limite do pente
+
+				// nBalas = limite - atual
+				pente = arma.pente[2] - arma.pente[0];
+				//desconta do total o quanto irá carregar
+
+				if (pente > this.corpo.costas.slot[i].qtde) {	//se precisa de mais balas do que tem
+				pente = this.corpo.costas.slot[i].qtde;
+				this.corpo.costas.slot[i].qtde = 0
+				} else {
+					this.corpo.costas.slot[i].qtde -= pente;
+				}
+				//atualiza o total de balas dessa arma
+				arma.pente[1] = this.corpo.costas.slot[i].qtde;
+				arma.recarregar(pente);
+				return true;
+			}
+		}
+	}
+	equipar (arma) {
+        if (this.corpo.maoD == null) {
+            this.corpo.maoD = arma;
+            this.corpo.maoD.anatomia.pArma[0] = this.sprites.posX + 30;
+            this.corpo.maoD.anatomia.pArma[1] = this.sprites.posY + 60;
+            this.postura -= 5;   //todos os posturas armados sao (desarmado - 5)
+        }
+    }
+	usar (obj) {
+		if (USAVEIS.includes(obj.tipo)) {
+			switch (obj.tipo) {
+				case 'MOCHILA':
+				this.corpo.costas = obj;
+				return true;
+				case 'MUNICAO':
+					if (this.guardar(obj)) {
+						return true;
+					}
+			}
+		}
+	}
     spawn(x, y) {
         this.sprites.render(x, y);
     }
@@ -107,10 +184,10 @@ class Bot {
 
         function renderArma(bot) {
             if (bot.corpo.maoD != null) {
-                bot.corpo.maoD.anatomia.pArma[0] = bot.sprites.posX + 20;
-                bot.corpo.maoD.anatomia.pArma[1] = bot.sprites.posY + 45;
+                bot.corpo.maoD.anatomia.pArma[0] = bot.sprites.posX + 30;
+                bot.corpo.maoD.anatomia.pArma[1] = bot.sprites.posY + 60;
 
-                drawArma(bot.corpo.maoD, CONTEXT, [alvo[0], alvo[1]]);
+                drawArma(bot.corpo.maoD, CONTEXT, [alvo[0], alvo[1]], true);
                 return bot;
             }
         }
@@ -130,9 +207,40 @@ class Bot {
         }
 
         function IA(player, bot) {
+			//Pensamento
+				//Foco no inimigo
+				let distAlvo = DistAB([bot.sprites.posX, bot.sprites.posY], [player.sprites.posX, player.sprites.posY])
+			if (distAlvo < 500) {	//Se estiver no campo de visão, aponta a arma e se aproxima
+				bot.cerebro.Mirar.mirar = true;
+				bot.cerebro.seguir = true;
+
+				try {
+					if (distAlvo < bot.corpo.maoD.alcance) { //se estiver no alcance da arma, para de seguir e atira
+					bot.cerebro.matar = true;
+					bot.cerebro.seguir = false;
+					}
+				} catch {
+					console.log(`${bot.nome} :: Não posso atirar!`);
+				}
+			} else {
+				bot.cerebro.Mirar.mirar = false;
+				bot.cerebro.matar = false;
+				bot.cerebro.seguir = false;
+			}
+
+
+			//Ação
             if (bot.cerebro.seguir) {
+				console.log(`${bot.nome} :: Engajado no inimigo!`);
                 bot.IA_seguir(player);
             }
+			if (bot.cerebro.Mirar.mirar) {
+				console.log(`${bot.nome} :: Alvo na mira`);
+				bot.IA_mirar(player);
+			}
+			if (bot.cerebro.matar) {
+				bot.IA_matar();
+			}
         }
 
 		return true;
@@ -160,5 +268,13 @@ class Bot {
             this.postura = postura(this, PARADO_D);
         }
     }
-
+	IA_mirar(player) {
+		this.cerebro.Mirar.alvo.x = player.sprites.posX;
+		this.cerebro.Mirar.alvo.y = player.sprites.posY + 30;
+	}
+	IA_matar() {
+		if (this.corpo.maoD.atirar(this.cerebro.Mirar.alvo.x, this.cerebro.Mirar.alvo.y) == false) {
+			this.recarregarArma();
+		}
+	}
 }

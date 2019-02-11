@@ -1,4 +1,4 @@
-const FPS = 30;
+const FPS = 50;
 const ARMA_TESTE = fuzil1;
 var intervalTime = 1000 / FPS;
 var e, mouseX, mouseY, mouseCode,
@@ -41,20 +41,10 @@ function checkKeys () {
         v = 3;
     }
 
-    if (keyPressList[82]) {
+    if (keyPressList[82]) { //R
         player.recarregarArma();
     }
 
-    if (keyPressList[81]) {  //Q
-        if (BOT_player.cerebro.seguir == true) {
-            BOT_player.cerebro.seguir = false;
-            console.log('UNFOLLOW');
-        } else {
-            BOT_player.cerebro.seguir = true;
-            console.log('FOLLOW');
-        }
-        keyPressList[81] = false;
-    }
 
     if (keyPressList[65]) { //A
         player.andar('e', v);
@@ -79,14 +69,14 @@ function checkKeys () {
 
     switch (mouseCode) {
         case 0:
-            player.agir(1);
+            player.agir(1, mouseX, mouseY);
             break;
         case 1:
             console.log('Middle click');
             break;
         case 2:
             console.log('R click');
-            player.agir(2);
+            player.agir(2, mouseX, mouseY);
             break;
     }
 }
@@ -107,7 +97,7 @@ function canvasApp () {
     gameLoop();
 }
 
-var BOT_player = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
+var bot_player = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
     width: 198,
     height: 930,
     image: BOT_MILITAR_SHEET,
@@ -115,12 +105,12 @@ var BOT_player = new Bot('Bot Militar 1', 7, 5, [ 10, 10 ], {
     TporQuadro: 6,
     nQuadros: 3,
     nLinhas: 10,
-    posX: 700,
+    posX: 1300,
     posY: 300,
     loop: true
 }, [ 100, 100 ]);
 
-var BOT_player2 = new Bot('Bot Militar 2', 7, 5, [ 10, 10 ], {
+var bot_player2 = new Bot('Bot Militar 2', 7, 5, [ 10, 10 ], {
     width: 198,
     height: 930,
     image: BOT_MILITAR_SHEET2,
@@ -128,7 +118,7 @@ var BOT_player2 = new Bot('Bot Militar 2', 7, 5, [ 10, 10 ], {
     TporQuadro: 6,
     nQuadros: 3,
     nLinhas: 10,
-    posX: 600,
+    posX: 1500,
     posY: 300,
     loop: true
 }, [ 100, 100 ]);
@@ -141,7 +131,7 @@ var player = new Personagem('Militar 1', 7, 5, [ 10, 10 ], {
     TporQuadro: 6,
     nQuadros: 3,
     nLinhas: 10,
-    posX: 400,
+    posX: 580,
     posY: 100,
     loop: true
 }, [ 100, 100 ]);
@@ -168,12 +158,25 @@ var mesa2 = Sprites(
     });
 objColisao.push(mesa, mesa2);
 itens.push(mochila_C, municao_FUZIL, municao_SUB);
-bots.push(BOT_player, BOT_player2);
+bots.push(bot_player, bot_player2);
 
 var testArma = FMB;
 testArma.ConectarAnexo(SMMB);
 testArma.ConectarAnexo(atc_miraTatica);
 player.equipar(testArma);
+player.usar(mochila_B);
+player.guardar(municao_FUZIL);
+player.guardar(municao_SUB);
+player.guardar(municao_SHOTGUN);
+
+
+bot_player.usar(mochila_B);
+bot_player.guardar(municao_FUZIL);
+bot_player.equipar(fuzil1);
+
+bot_player2.usar(mochila_B);
+bot_player2.guardar(municao_FUZIL);
+bot_player2.equipar(fuzil1);
 
 function drawScreen () {
     CONTEXT.clearRect(0,0,THECANVAS.width,THECANVAS.height);
@@ -187,6 +190,7 @@ function drawScreen () {
 
     renderMain();
 
+    drawDistPLayerAim(DistAB([ mouseX, mouseY ], [ player.sprites.posX, player.sprites.posY ]), mouseX, mouseY);
     CONTEXT.restore();
 
     renderInterface();
@@ -198,13 +202,19 @@ function renderBackground () {
 }
 
 function renderMain () {
-    bots.forEach((i) => {
-        if (i.update([ mouseX, mouseY ], player) == false) {
-            bots = RemoveFromArray(bots, [ i ]);//se o bot morrer não é mais renderizado
+    player.update();
+
+    bots.forEach((b) => {
+        if (b.update([ b.cerebro.Mirar.alvo.x, b.cerebro.Mirar.alvo.y ], player) == false) {
+            bots = RemoveFromArray(bots, [ b ]);//se o bot morrer não é mais renderizado
         }
+        if (player.sprites.posY > b.sprites.posY) {
+            player.update();
+        }
+        checkCollision(b, mapaTeste);
+        block(b.sprites, player.sprites);
     }); //update de todos os bots
 
-    player.update();
     updateTiro(tirosNoAr, CONTEXT);
 }
 

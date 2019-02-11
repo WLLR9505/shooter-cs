@@ -50,6 +50,13 @@ function drawCamPosition () {
     CONTEXT.fillText('CAMERA :: x ' + cam.x + '  y ' + cam.y, 5, 35);
 }
 
+function drawDistPLayerAim (dist, x, y) {
+    CONTEXT.fillStyle = '#000000';
+    CONTEXT.font = '14px consolas';
+    CONTEXT.textBaseline = 'top';
+    CONTEXT.fillText(Math.round(dist), x, y);
+}
+
 function devInfo (THECANVAS, CONTEXT, mouseX, mouseY) {
     drawFPS(THECANVAS, CONTEXT);
     drawMousePosition(CONTEXT, mouseX, mouseY);

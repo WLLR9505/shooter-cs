@@ -69,10 +69,10 @@ class Weapon {
         this.categoria = categoria;
         this.tipo = tipo || null;
     }
-    atirar() {
+    atirar(X, Y) {
         if (this.pente[0] > 0) {
             if (delay == 0) {
-                drawTiro(BALAS[this.categoria][1], this, tirosNoAr, [mouseX, mouseY], CONTEXT);
+                drawTiro(BALAS[this.categoria][1], this, tirosNoAr, [X, Y], CONTEXT);
                 this.pente[0] -= 1;
                 delay = this.taxaTiros;
             }
@@ -116,7 +116,7 @@ class Weapon {
 }
 var angulo = 0, x = 100, y = 150;
 let miraMouse;
-function drawArma(arma, CONTEXT, XY = [2]) {
+function drawArma(arma, CONTEXT, XY = [2], mira = true) {
     angulo = Math.atan2(XY[1] - arma.anatomia.pArma[1], XY[0] - arma.anatomia.pArma[0]);
     CONTEXT.save();
     CONTEXT.translate(arma.anatomia.pArma[0], arma.anatomia.pArma[1]);
@@ -143,17 +143,20 @@ function drawArma(arma, CONTEXT, XY = [2]) {
     CONTEXT.restore();
     let pMiraX = XY[0];
     let pMiraY = XY[1];
-    CONTEXT.drawImage(miraMouse.extra.img, pMiraX, pMiraY);
+    if (mira == true) {
+        CONTEXT.drawImage(miraMouse.extra.img, pMiraX, pMiraY);
+    }
 }
 function updateTiro(tirosNoAr, CONTEXT) {
     if (tirosNoAr.length == 0) {
         return;
     }
     for (var i = 0; i < tirosNoAr.length; i++) {
-        tirosNoAr[i].alcance--;
+        tirosNoAr[i].alcance -= tirosNoAr[i].limite;
         tirosNoAr[i].posX += tirosNoAr[i].dx * tirosNoAr[i].velocidadeTiro;
         tirosNoAr[i].posY += tirosNoAr[i].dy * tirosNoAr[i].velocidadeTiro;
-        if (tirosNoAr[i].alcance == 0) {
+        if (tirosNoAr[i].alcance <= 0) {
+            console.log('tiro removido percorreu : ' + DistAB(tirosNoAr[i].origem, [tirosNoAr[i].posX, tirosNoAr[i].posY]));
             tirosNoAr.shift();
             console.log('tiro removido', tirosNoAr.length);
             continue;
@@ -196,6 +199,11 @@ function drawTiro(bala, arma, tirosNoAr = [], XY = [2], CONTEXT) {
     tiro.alcance = arma.alcance;
     tiro.velocidadeTiro = arma.velocidadeTiro;
     tiro.anguloBala = anguloBala;
+    tiro.origem = [arma.anatomia.pArma[0], arma.anatomia.pArma[1]];
+    let lXY = [0, 0];
+    lXY[0] += tiro.dx * tiro.velocidadeTiro;
+    lXY[1] += tiro.dy * tiro.velocidadeTiro;
+    tiro.limite = DistAB([0, 0], lXY);
     tirosNoAr.push(tiro);
     CONTEXT.save();
     CONTEXT.translate(tiro.posX, tiro.posY);

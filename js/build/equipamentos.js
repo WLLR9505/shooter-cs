@@ -1,30 +1,30 @@
-var pistola = new Weapon('P1', [0, 0, 10], 30, 2, 5.5, 10, 2, 'pistola_1.png', {
+var pistola = new Weapon('P1', [0, 0, 10], 200, 2, 5.5, 10, 2, 'pistola_1.png', {
     pArma: [0, 0],
     pMao: [4, 9],
     pCano: [21, 6],
     pATCMira: [0, 12]
 }, CATEGORIA_PISTOLA);
-var fuzil1 = new Weapon('FZ-1A', [0, 0, 30], 60, 4, 6, 5, 3, 'fuzil_1.png', {
+var fuzil1 = new Weapon('FZ-1A', [0, 0, 30], 1000, 4, 6, 5, 3, 'fuzil_1.png', {
     pArma: [0, 0],
     pMao: [25, 12],
     pCano: [57, 6],
     pATCMira: [0, 13]
 }, CATEGORIA_FUZIL);
-var shotgunCurta = new Weapon('SHT-C', [0, 0, 5], 50, 7, 4.2, 15, 1, 'shotgun_curta.png', {
+var shotgunCurta = new Weapon('SHT-C', [0, 0, 5], 300, 7, 4.2, 15, 1, 'shotgun_curta.png', {
     pArma: [0, 0],
     pMao: [4, 11],
     pCano: [29, 6],
     pATCMira: [0, 15],
     pATCBase: [20, 2]
 }, CATEGORIA_SHOTGUN);
-var shotgunLonga = new Weapon('SHT-L', [0, 0, 7], 55, 6, 4.7, 20, 2, 'shotgun_longa.png', {
+var shotgunLonga = new Weapon('SHT-L', [0, 0, 7], 400, 6, 4.7, 20, 2, 'shotgun_longa.png', {
     pArma: [0, 0],
     pMao: [18, 12],
     pCano: [43, 6],
     pATCMira: [0, 15],
     pATCBase: [20, 2]
 }, CATEGORIA_SHOTGUN);
-var FMA = new Weapon('FM-A', [0, 0, 20], 70, 1, 5, 6, 3, 'fm-a.png', {
+var FMA = new Weapon('FM-A', [0, 0, 20], 1150, 1, 5, 6, 3, 'fm-a.png', {
     pArma: [0, 0],
     pMao: [30, 12],
     pCano: [55, 6],
@@ -32,13 +32,13 @@ var FMA = new Weapon('FM-A', [0, 0, 20], 70, 1, 5, 6, 3, 'fm-a.png', {
     pATCBase: [15, 2],
     pATCEspecial: [5, 2]
 }, CATEGORIA_FUZIL);
-var SMMA = new Weapon('SMM-A', [0, 0, 25], 40, 2.7, 5.5, 5, 2, 'smm-a.png', {
+var SMMA = new Weapon('SMM-A', [0, 0, 25], 670, 2.7, 5.5, 5, 2, 'smm-a.png', {
     pArma: [0, 0],
     pMao: [30, 12],
     pCano: [50, 6],
     pATCMira: [-5, 15]
 }, CATEGORIA_SUB, tipo_Anexo.ESPECIAL);
-var FMB = new Weapon('FM-B', [0, 0, 35], 65, 2, 6, 4, 3, 'fm-b.png', {
+var FMB = new Weapon('FM-B', [0, 0, 35], 1270, 2, 6, 4, 3, 'fm-b.png', {
     pArma: [0, 0],
     pMao: [30, 12],
     pCano: [55, 6],
@@ -46,7 +46,7 @@ var FMB = new Weapon('FM-B', [0, 0, 35], 65, 2, 6, 4, 3, 'fm-b.png', {
     pATCBase: [15, 5],
     pATCEspecial: [5, 4]
 }, CATEGORIA_FUZIL);
-var SMMB = new Weapon('SMM-B', [0, 0, 20], 35, 3, 5, 4.5, 2, 'smm-b.png', {
+var SMMB = new Weapon('SMM-B', [0, 0, 20], 1085, 3, 5, 4.5, 2, 'smm-b.png', {
     pArma: [0, 0],
     pMao: [30, 12],
     pCano: [50, 6],

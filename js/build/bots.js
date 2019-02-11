@@ -6,8 +6,15 @@ var corpoNULL = {
     cabeca: null
 };
 var cerebroNULL = {
-    seguir: null
+    seguir: null,
+    matar: null,
+    Mirar: {
+        mirar: false,
+        alvo: { x: 0,
+            y: 0 }
+    }
 };
+;
 ;
 ;
 class Bot {
@@ -20,6 +27,60 @@ class Bot {
         this.sprites = Sprites(spriteParams);
         this.postura = 5;
         this.cerebro = Object.assign({}, cerebroNULL);
+    }
+    guardar(obj) {
+        try {
+            this.corpo.costas.guardar(obj);
+            return true;
+        }
+        catch (_a) {
+            console.log('BOT :: não tem inventário');
+        }
+    }
+    recarregarArma(arma = this.corpo.maoD) {
+        let pente = 0;
+        if (arma.pente[0] == arma.pente[2]) {
+            return true;
+        }
+        if (this.corpo.costas == null) {
+            return false;
+        }
+        for (let i = 0; i < this.corpo.costas.slot.length; i++) {
+            if (this.corpo.costas.slot[i].compatibilidade == arma.categoria) {
+                pente = arma.pente[2] - arma.pente[0];
+                if (pente > this.corpo.costas.slot[i].qtde) {
+                    pente = this.corpo.costas.slot[i].qtde;
+                    this.corpo.costas.slot[i].qtde = 0;
+                }
+                else {
+                    this.corpo.costas.slot[i].qtde -= pente;
+                }
+                arma.pente[1] = this.corpo.costas.slot[i].qtde;
+                arma.recarregar(pente);
+                return true;
+            }
+        }
+    }
+    equipar(arma) {
+        if (this.corpo.maoD == null) {
+            this.corpo.maoD = arma;
+            this.corpo.maoD.anatomia.pArma[0] = this.sprites.posX + 30;
+            this.corpo.maoD.anatomia.pArma[1] = this.sprites.posY + 60;
+            this.postura -= 5;
+        }
+    }
+    usar(obj) {
+        if (USAVEIS.includes(obj.tipo)) {
+            switch (obj.tipo) {
+                case 'MOCHILA':
+                    this.corpo.costas = obj;
+                    return true;
+                case 'MUNICAO':
+                    if (this.guardar(obj)) {
+                        return true;
+                    }
+            }
+        }
     }
     spawn(x, y) {
         this.sprites.render(x, y);
@@ -77,9 +138,9 @@ class Bot {
         }
         function renderArma(bot) {
             if (bot.corpo.maoD != null) {
-                bot.corpo.maoD.anatomia.pArma[0] = bot.sprites.posX + 20;
-                bot.corpo.maoD.anatomia.pArma[1] = bot.sprites.posY + 45;
-                drawArma(bot.corpo.maoD, CONTEXT, [alvo[0], alvo[1]]);
+                bot.corpo.maoD.anatomia.pArma[0] = bot.sprites.posX + 30;
+                bot.corpo.maoD.anatomia.pArma[1] = bot.sprites.posY + 60;
+                drawArma(bot.corpo.maoD, CONTEXT, [alvo[0], alvo[1]], true);
                 return bot;
             }
         }
@@ -96,8 +157,35 @@ class Bot {
             renderArma(this);
         }
         function IA(player, bot) {
+            let distAlvo = DistAB([bot.sprites.posX, bot.sprites.posY], [player.sprites.posX, player.sprites.posY]);
+            if (distAlvo < 500) {
+                bot.cerebro.Mirar.mirar = true;
+                bot.cerebro.seguir = true;
+                try {
+                    if (distAlvo < bot.corpo.maoD.alcance) {
+                        bot.cerebro.matar = true;
+                        bot.cerebro.seguir = false;
+                    }
+                }
+                catch (_a) {
+                    console.log(`${bot.nome} :: Não posso atirar!`);
+                }
+            }
+            else {
+                bot.cerebro.Mirar.mirar = false;
+                bot.cerebro.matar = false;
+                bot.cerebro.seguir = false;
+            }
             if (bot.cerebro.seguir) {
+                console.log(`${bot.nome} :: Engajado no inimigo!`);
                 bot.IA_seguir(player);
+            }
+            if (bot.cerebro.Mirar.mirar) {
+                console.log(`${bot.nome} :: Alvo na mira`);
+                bot.IA_mirar(player);
+            }
+            if (bot.cerebro.matar) {
+                bot.IA_matar();
             }
         }
         return true;
@@ -126,6 +214,15 @@ class Bot {
         }
         else {
             this.postura = postura(this, PARADO_D);
+        }
+    }
+    IA_mirar(player) {
+        this.cerebro.Mirar.alvo.x = player.sprites.posX;
+        this.cerebro.Mirar.alvo.y = player.sprites.posY + 30;
+    }
+    IA_matar() {
+        if (this.corpo.maoD.atirar(this.cerebro.Mirar.alvo.x, this.cerebro.Mirar.alvo.y) == false) {
+            this.recarregarArma();
         }
     }
 }

@@ -49,10 +49,10 @@ class Personagem {
     spawn(x, y) {
         this.sprites.render(x, y);
     }
-    agir(modo) {
+    agir(modo, X, Y) {
         switch (modo) {
             case 1:
-                this.corpo.maoD.atirar();
+                this.corpo.maoD.atirar(X, Y);
                 break;
             case 2:
                 try {
