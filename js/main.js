@@ -33,7 +33,7 @@ function gameLoop() {
     checkKeys(player);
     drawScreen();
     devInfo();
-    inspect([player.sprites.posX, player.sprites.posY]);
+    inspect(tirosNoAr.length);
     drawDistPLayerAim(DistAB([mouseX, mouseY], [player.sprites.posX, player.sprites.posY]), mouseX - cam.x, mouseY - cam.y);
     window.setTimeout(gameLoop, intervalTime);
 }

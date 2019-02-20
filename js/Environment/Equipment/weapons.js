@@ -188,5 +188,5 @@ function statusMunicao(personagem, CONTEXT) {
         }
     }
 }
-export { Arma, drawArma, updateTiro, drawTiro, statusMunicao, tirosNoAr };
+export { Arma, BALAS, drawArma, updateTiro, drawTiro, statusMunicao, tirosNoAr };
 //# sourceMappingURL=weapons.js.map

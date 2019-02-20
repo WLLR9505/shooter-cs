@@ -1,6 +1,6 @@
 import { Bot } from "./Characters/bots.js";
 import { CONTEXT } from "../Engine/canvas.js";
-import { FMB, SMMB, atc_miraTatica, mochila_B, municao_FUZIL, municao_SUB, municao_SHOTGUN, fuzil1, shotgunLonga, mochila_A, mochila_C } from "./items.js";
+import { FMB, SMMB, atc_miraTatica, mochila_B, municao_FUZIL, municao_SUB, municao_SHOTGUN, fuzil1, shotgunLonga, mochila_A, mochila_C, shotgunCurta } from "./items.js";
 import { CopyObj } from "../Tools/tools.js";
 import { Player } from "./Characters/player.js";
 

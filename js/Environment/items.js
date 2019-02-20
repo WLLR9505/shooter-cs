@@ -4,6 +4,7 @@ import { Mochila } from './Equipment/backpack.js';
 import { Municao } from './Equipment/bullets.js';
 import { CONTEXT } from '../Engine/canvas.js';
 import { Arma } from './Equipment/weapons.js';
+import { Shotgun } from './Equipment/Weapons/shotgun.js';
 const CATEGORIA_PISTOLA = 0;
 const CATEGORIA_SHOTGUN = 1;
 const CATEGORIA_SUB = 2;
@@ -29,14 +30,14 @@ var fuzil1 = new Arma('FZ-1A', [0, 0, 30], 1000, 4, 6, 5, 3, 'fuzil_1.png', {
     pCano: [57, 6],
     pATCMira: [0, 13]
 }, CATEGORIA_FUZIL);
-var shotgunCurta = new Arma('SHT-C', [0, 0, 5], 300, 7, 4.2, 15, 1, 'shotgun_curta.png', {
+var shotgunCurta = new Shotgun('SHT-C', [0, 0, 5], 300, 13, 4.2, 15, 3, 1, 'shotgun_curta.png', {
     pArma: [0, 0],
     pMao: [4, 11],
     pCano: [29, 6],
     pATCMira: [0, 15],
     pATCBase: [20, 2]
 }, CATEGORIA_SHOTGUN);
-var shotgunLonga = new Arma('SHT-L', [0, 0, 7], 400, 6, 4.7, 20, 2, 'shotgun_longa.png', {
+var shotgunLonga = new Shotgun('SHT-L', [0, 0, 7], 400, 7, 4.7, 20, 5, 2, 'shotgun_longa.png', {
     pArma: [0, 0],
     pMao: [18, 12],
     pCano: [43, 6],

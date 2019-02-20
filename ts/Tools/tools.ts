@@ -25,4 +25,11 @@ function DistAB(A = [2], B = [2]) {
     return Math.sqrt( Math.pow( (B[0] - A[0]) , 2) + Math.pow( (B[1] - A[1]) , 2) )
 }
 
-export { DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj}
+function Repeat(times : number, callback) {
+    while(times > 0) {
+        callback()
+        times--;
+    }
+}
+
+export { DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat}
