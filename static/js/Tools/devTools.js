@@ -1,15 +1,15 @@
 import { CONTEXT, } from "../Engine/canvas.js";
-import { mouseX, mouseY } from "../Controls/MAK.js";
 import { cam } from "../Engine/camera.js";
 import { drawFPS } from "./fpsCounter.js";
-function drawMousePosition(CONTEXT, mouseX, mouseY) {
+import { CONTROLS } from "../main.js";
+function drawMousePosition(CONTEXT, x, y) {
     CONTEXT.fillStyle = '#ffffff';
     CONTEXT.strokeStyle = '#000000';
     CONTEXT.lineWidth = 3;
     CONTEXT.font = '14px consolas';
     CONTEXT.textBaseline = 'top';
-    CONTEXT.strokeText('x ' + mouseX + '  y ' + mouseY, 5, 20);
-    CONTEXT.fillText('x ' + mouseX + '  y ' + mouseY, 5, 20);
+    CONTEXT.strokeText('x ' + x + '  y ' + y, 5, 20);
+    CONTEXT.fillText('x ' + x + '  y ' + y, 5, 20);
 }
 function inspect(dado) {
     CONTEXT.fillStyle = '#ffffff';
@@ -26,8 +26,8 @@ function drawCamPosition() {
     CONTEXT.lineWidth = 3;
     CONTEXT.font = '14px consolas';
     CONTEXT.textBaseline = 'top';
-    CONTEXT.strokeText('CAMERA :: x ' + cam.x + '  y ' + cam.y, 5, 35);
-    CONTEXT.fillText('CAMERA :: x ' + cam.x + '  y ' + cam.y, 5, 35);
+    CONTEXT.strokeText('CAMERA :: x ' + Math.round(cam.x) + '  y ' + Math.round(cam.y), 5, 35);
+    CONTEXT.fillText('CAMERA :: x ' + Math.round(cam.x) + '  y ' + Math.round(cam.y), 5, 35);
 }
 function drawDistPLayerAim(dist, x, y) {
     CONTEXT.strokeStyle = '#000000';
@@ -50,7 +50,7 @@ function circleArea(centerX, centerY, radius) {
 }
 function devInfo() {
     drawFPS(CONTEXT);
-    drawMousePosition(CONTEXT, mouseX, mouseY);
+    drawMousePosition(CONTEXT, Math.round(CONTROLS.x), Math.round(CONTROLS.y));
     drawCamPosition();
 }
 export { devInfo, inspect, drawArea, circleArea, drawDistPLayerAim };

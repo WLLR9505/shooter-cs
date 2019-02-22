@@ -61,6 +61,11 @@ class Personagem {
         }
     }
 	usar (obj) {
+
+		if (obj == null) {
+			return false;
+		}
+
 		if (USAVEIS.includes(obj.tipo)) {
 			switch (obj.tipo) {
 				case 'MOCHILA':

@@ -10,10 +10,21 @@ import { RemoveFromArray, DistAB } from "./Tools/tools.js";
 import { devInfo, inspect, drawArea, circleArea, drawDistPLayerAim } from "./Tools/devTools.js";
 import { loadObjects } from "./Environment/objects.js";
 import { itens } from "./Environment/items.js";
+import { ControlsInterface, checkControls } from "./Controls/CI.js";
+import { checkPads } from "./Controls/Gamepad.js";
 
 const FPS = 50;
 var intervalTime = 1000 / FPS;
 
+//-------------------------------------
+//-------------CONTROLES---------------
+
+var MouseAndKeyboard = new ControlsInterface(checkKeys);
+var GamepadControl = new ControlsInterface(checkPads);
+
+const CONTROLS = GamepadControl;
+
+//-------------------------------------
 //Onde são declarados balas disparadas, objetos com colisão e bots
 var tirosNoAr = [];
 var objColisao = [];
@@ -38,13 +49,13 @@ function gameLoad() {
 }
 
 function gameLoop () {
-    checkKeys(player);    //verifica os controles
+    checkControls(CONTROLS, CONTROLS.x, CONTROLS.y, player);
     drawScreen();         //atualiza os quadros
 
     //DevTools
     devInfo();  //informações com posição do mouse, da camera, FPS...
     inspect(tirosNoAr.length);
-    drawDistPLayerAim(DistAB([ mouseX, mouseY ], [ player.sprites.posX, player.sprites.posY ]), mouseX -cam.x, mouseY - cam.y);
+    drawDistPLayerAim(DistAB([ CONTROLS.x, CONTROLS.y ], [ player.sprites.centerX(), player.sprites.centerY() ]), CONTROLS.x -cam.x, CONTROLS.y - cam.y);
 
 
     window.setTimeout(gameLoop, intervalTime);
@@ -72,14 +83,14 @@ function renderBackground () {
 
 function renderMain () {
 
-    player.update();
+    player.update(CONTROLS.x, CONTROLS.y);
     bots.forEach((b) => {
         if (b.update([ b.cerebro.Mirar.alvo.x, b.cerebro.Mirar.alvo.y ], player) == false) {
             bots = RemoveFromArray(bots, [ b ]);//se o bot morrer não é mais renderizado
             console.log('BOT DEVERIA TER MORRIDO');
         }
         if (player.sprites.posY > b.sprites.posY) {
-            player.update();
+            player.update(CONTROLS.x, CONTROLS.y);
         }
 
         let bXb = bulletCollision(b.sprites);   //balas colidem com os bots
@@ -115,4 +126,4 @@ function renderInterface () {
     statusMunicao(player, CONTEXT);
 }
 
-export { tirosNoAr, objColisao, bots }
+export { tirosNoAr, objColisao, bots, CONTROLS }

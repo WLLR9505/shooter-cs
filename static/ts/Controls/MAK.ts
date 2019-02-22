@@ -1,5 +1,4 @@
-import { postura, estado } from "../Environment/Characters/character.js";
-import { Player } from "../Environment/Characters/player.js";
+import { ControlsInterface } from "./CI.js";
 
 var mouseX, mouseY, mouseCode, v = 3;
 var keyPressList = [];
@@ -26,49 +25,36 @@ document.onkeyup = function (e) {
     keyPressList[e.keyCode] = false;
 };
 
-function checkKeys (player : Player) {
-    if (keyPressList[16]) { //Shift L
-        v = player.velocidade;
-    } else {
-        v = 3;
-    }
+function checkKeys (control : ControlsInterface) {
 
-    if (keyPressList[82]) { //R
-        player.recarregarArma();
-    }
+    control.run = keyPressList[16]; //Shift L
 
-    if (keyPressList[65]) { //A
-        player.andar('e', [mouseX, mouseY], v);
-    } else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
-    if (keyPressList[68]) { //D
-        player.andar('d', [mouseX, mouseY], v);
-    } else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
-    if (keyPressList[83]) { //S
-        player.andar('b', [mouseX, mouseY], v);
-    } else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
-    if (keyPressList[87]) { //W
-        player.andar('c', [mouseX, mouseY], v);
-    } else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
+    control.reload = keyPressList[82]; //R
+
+    control.left = keyPressList[65]; //A
+    control.right = keyPressList[68]; //D
+    control.down = keyPressList[83]; //S
+    control.up = keyPressList[87]; //W
+
+    control.x = mouseX;
+    control.y = mouseY;
 
     switch (mouseCode) {
         case 0:
-            player.agir(1, mouseX, mouseY);
+            control.primaryAction = true;
             break;
         case 1:
             console.log('Middle click');
             break;
         case 2:
             console.log('R click');
-            player.agir(2, mouseX, mouseY);
+            control.secondaryAction = true;
             break;
+    }
+
+    if (mouseCode == undefined) {
+        control.primaryAction = false;
+        control.secondaryAction = false;
     }
 }
 

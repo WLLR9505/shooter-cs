@@ -1,4 +1,3 @@
-import { postura, estado } from "../Environment/Characters/character.js";
 var mouseX, mouseY, mouseCode, v = 3;
 var keyPressList = [];
 window.onmousedown = function (e) {
@@ -19,51 +18,30 @@ document.onkeyup = function (e) {
     e = e ? e : window.event;
     keyPressList[e.keyCode] = false;
 };
-function checkKeys(player) {
-    if (keyPressList[16]) {
-        v = player.velocidade;
-    }
-    else {
-        v = 3;
-    }
-    if (keyPressList[82]) {
-        player.recarregarArma();
-    }
-    if (keyPressList[65]) {
-        player.andar('e', [mouseX, mouseY], v);
-    }
-    else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
-    if (keyPressList[68]) {
-        player.andar('d', [mouseX, mouseY], v);
-    }
-    else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
-    if (keyPressList[83]) {
-        player.andar('b', [mouseX, mouseY], v);
-    }
-    else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
-    if (keyPressList[87]) {
-        player.andar('c', [mouseX, mouseY], v);
-    }
-    else {
-        player.postura = postura(player, estado.PARADO_D);
-    }
+function checkKeys(control) {
+    control.run = keyPressList[16];
+    control.reload = keyPressList[82];
+    control.left = keyPressList[65];
+    control.right = keyPressList[68];
+    control.down = keyPressList[83];
+    control.up = keyPressList[87];
+    control.x = mouseX;
+    control.y = mouseY;
     switch (mouseCode) {
         case 0:
-            player.agir(1, mouseX, mouseY);
+            control.primaryAction = true;
             break;
         case 1:
             console.log('Middle click');
             break;
         case 2:
             console.log('R click');
-            player.agir(2, mouseX, mouseY);
+            control.secondaryAction = true;
             break;
+    }
+    if (mouseCode == undefined) {
+        control.primaryAction = false;
+        control.secondaryAction = false;
     }
 }
 function onMouseMove(e, cam) {

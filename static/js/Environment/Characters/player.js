@@ -1,5 +1,4 @@
 import { drawArma } from '../Equipment/weapons.js';
-import { mouseY, mouseX } from '../../Controls/MAK.js';
 import { CONTEXT } from '../../Engine/canvas.js';
 import { Personagem, postura, estado } from './character.js';
 class Player extends Personagem {
@@ -13,7 +12,7 @@ class Player extends Personagem {
                 break;
             case 2:
                 try {
-                    if (this.corpo.maoD.attachment[3].atirar() == false) {
+                    if (this.corpo.maoD.attachment[3].atirar(X, Y) == false) {
                         this.recarregarArma(this.corpo.maoD.attachment[3]);
                     }
                     ;
@@ -24,17 +23,17 @@ class Player extends Personagem {
                 break;
         }
     }
-    update() {
+    update(x, y) {
         var mod = [30, 60];
-        if (mouseY < this.sprites.posY) {
+        if (y < this.sprites.posY) {
             mod[0] = 35;
             this.postura = postura(this, estado.ANDADADO_D_COSTAS);
         }
         else {
-            if (mouseX > this.sprites.posX) {
+            if (x > this.sprites.posX) {
                 this.postura = postura(this, estado.ANDANDO_D_DIREITA);
             }
-            if (mouseX < this.sprites.posX) {
+            if (x < this.sprites.posX) {
                 mod[0] = 35;
                 this.postura = postura(this, estado.ANDANDO_D_ESQUERDA);
             }
@@ -43,7 +42,7 @@ class Player extends Personagem {
             if (pers.corpo.maoD != null) {
                 pers.corpo.maoD.anatomia.pArma[0] = pers.sprites.posX + mod[0];
                 pers.corpo.maoD.anatomia.pArma[1] = pers.sprites.posY + mod[1];
-                drawArma(pers.corpo.maoD, CONTEXT, [mouseX, mouseY]);
+                drawArma(pers.corpo.maoD, CONTEXT, [x, y]);
                 return pers;
             }
         }
