@@ -1,4 +1,6 @@
 import { estado, postura } from "../Environment/Characters/character.js";
+import { checkKeys } from "./MAK.js";
+import { checkPads } from "./Gamepad.js";
 let v = 3;
 class ControlsInterface {
     constructor(mode) {
@@ -60,5 +62,13 @@ function checkControls(controlMode, x, y, player) {
         player.agir(2, controlMode.x, controlMode.y);
     }
 }
-export { checkControls, ControlsInterface };
+function loadControls(config) {
+    if (config.controlMode == "Gamepad") {
+        return new ControlsInterface(checkPads);
+    }
+    else {
+        return new ControlsInterface(checkKeys);
+    }
+}
+export { checkControls, loadControls, ControlsInterface };
 //# sourceMappingURL=CI.js.map

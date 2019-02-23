@@ -1,5 +1,7 @@
 import { estado, postura } from "../Environment/Characters/character.js";
 import { Player } from "../Environment/Characters/player.js";
+import { checkKeys } from "./MAK.js";
+import { checkPads } from "./Gamepad.js";
 
 let v = 3;
 class ControlsInterface {
@@ -81,12 +83,13 @@ function checkControls(controlMode : ControlsInterface, x, y, player : Player) {
     }
 
 }
-// TODO:
-//[X]    -   correr
-//[X]    -   recarregar
-//[X]    -   andar cima baixo esquerda direita
-//[X]    -   ação primaria
-//[X]    -   ação secundária
-//[X]    -   mouse X Y
 
-export { checkControls, ControlsInterface }
+function loadControls(config) {
+    if(config.controlMode == "Gamepad") {
+        return new ControlsInterface(checkPads);    //gamepad
+    } else {
+        return new ControlsInterface(checkKeys);    //mouse e teclado
+    }
+}
+
+export { checkControls, loadControls, ControlsInterface }

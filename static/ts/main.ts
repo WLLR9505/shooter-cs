@@ -1,28 +1,22 @@
 import { cam, updateCam } from "./Engine/camera.js";
-import { checkKeys, onMouseMove, mouseX, mouseY } from "./Controls/MAK.js";
+import { onMouseMove } from "./Controls/MAK.js";
 import { player, loadEntities } from "./Environment/entity.js";
 import { renderizarMapa, renderizarObjetos } from "./Engine/render.js";
 import { mapaTeste } from "./Environment/map.js";
-import { checkCollision, block, bulletCollision } from "./Engine/physics.js";
+import { checkCollision, bulletCollision } from "./Engine/physics.js";
 import { THECANVAS, CONTEXT } from "./Engine/canvas.js";
 import { statusMunicao, updateTiro } from "./Environment/Equipment/weapons.js";
 import { RemoveFromArray, DistAB } from "./Tools/tools.js";
 import { devInfo, inspect, drawArea, circleArea, drawDistPLayerAim } from "./Tools/devTools.js";
 import { loadObjects } from "./Environment/objects.js";
 import { itens } from "./Environment/items.js";
-import { ControlsInterface, checkControls } from "./Controls/CI.js";
-import { checkPads } from "./Controls/Gamepad.js";
+import { checkControls, loadControls } from "./Controls/CI.js";
+import { loadJSON } from "./Tools/jsonLoader.js";
 
-const FPS = 50;
-var intervalTime = 1000 / FPS;
-
-//-------------------------------------
-//-------------CONTROLES---------------
-
-var MouseAndKeyboard = new ControlsInterface(checkKeys);
-var GamepadControl = new ControlsInterface(checkPads);
-
-const CONTROLS = GamepadControl;
+var FPS;
+var intervalTime;
+var config;
+var CONTROLS;
 
 //-------------------------------------
 //Onde são declarados balas disparadas, objetos com colisão e bots
@@ -38,14 +32,24 @@ THECANVAS.addEventListener('mousemove', (e) => {
     onMouseMove(e, cam);
 });
 
-function canvasApp () {
-    gameLoad();
-    gameLoop();
+async function getConfigs(response) {
+    config = JSON.parse(response);
 }
 
-function gameLoad() {
-    loadEntities(bots);
-    loadObjects(objColisao)
+function canvasApp () {
+    loadJSON('../../config.json', (response) => {
+        getConfigs(response).then(() => {   //só inicia o gameLoop depois de ter carregado o 'config.json'
+
+            CONTROLS = loadControls(config);
+            FPS = config.FPS;
+            intervalTime = 1000 / FPS;
+
+            loadEntities(bots);
+            loadObjects(objColisao);
+            console.log('Configurações carregadas com sucesso!');
+            gameLoop();
+        });
+    });
 }
 
 function gameLoop () {
