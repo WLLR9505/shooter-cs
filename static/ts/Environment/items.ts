@@ -64,7 +64,7 @@ var FMA = new Arma('FM-A', [0, 0, 20], 1150, 1, 5, 6, 3, 'Rifles/fm-a.png',
         pCano: [55, 6],
         pATCMira: [10, 15],
         pATCBase: [15, 2],
-        pATCEspecial: [5, 2]
+        pATCEspecial: [5, 4]
     }, CATEGORIA_FUZIL);
 
 var SMMA = new Arma('SMM-A', [0, 0, 25], 670, 2.7, 5.5, 5, 2, 'SMG/smm-a.png',

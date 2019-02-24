@@ -99,12 +99,13 @@ class Personagem {
 			if (this.corpo.costas.slot[i].compatibilidade == arma.categoria) {
 				//procura no inventario municao da categoria da arma atual
 
-				//remove a munição do inventario de acordo com o limite do pente
+				if (arma.categoria == 1) { //se for uma shotgun (Só uma bala por vez)
+					pente = 1;
+				} else {
+				pente = arma.pente[2] - arma.pente[0]; //quanto precisa para encher o pente (nBalas = limite - atual)
+				}
 
-				// nBalas = limite - atual
-				pente = arma.pente[2] - arma.pente[0];
-				//desconta do total o quanto irá carregar
-
+				//desconta do total no inventário o quanto irá carregar
 				if (pente > this.corpo.costas.slot[i].qtde) {	//se precisa de mais balas do que tem
 				pente = this.corpo.costas.slot[i].qtde;
 				this.corpo.costas.slot[i].qtde = 0

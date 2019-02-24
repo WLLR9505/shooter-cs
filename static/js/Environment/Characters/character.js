@@ -77,7 +77,12 @@ class Personagem {
         }
         for (let i = 0; i < this.corpo.costas.slot.length; i++) {
             if (this.corpo.costas.slot[i].compatibilidade == arma.categoria) {
-                pente = arma.pente[2] - arma.pente[0];
+                if (arma.categoria == 1) {
+                    pente = 1;
+                }
+                else {
+                    pente = arma.pente[2] - arma.pente[0];
+                }
                 if (pente > this.corpo.costas.slot[i].qtde) {
                     pente = this.corpo.costas.slot[i].qtde;
                     this.corpo.costas.slot[i].qtde = 0;
