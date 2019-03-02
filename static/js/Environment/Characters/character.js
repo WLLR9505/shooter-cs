@@ -12,6 +12,12 @@ var estado;
     estado[estado["ANDANDO_D_ESQUERDA"] = 8] = "ANDANDO_D_ESQUERDA";
     estado[estado["ANDANDO_D_DIREITA"] = 9] = "ANDANDO_D_DIREITA";
 })(estado || (estado = {}));
+const ANDAR_PARAMS = [
+    ['c', estado.ANDADADO_D_COSTAS, -1],
+    ['b', estado.ANDANDO_A_FRENTE, 1],
+    ['e', estado.ANDANDO_D_ESQUERDA, -1],
+    ['d', estado.ANDANDO_A_DIREITA, 1]
+];
 const USAVEIS = ['MOCHILA', 'MUNICAO'];
 ;
 var corpoNULL = {
@@ -96,35 +102,18 @@ class Personagem {
             }
         }
     }
-    andar(direcao, olhos = [2], v) {
-        if (direcao == 'c') {
-            this.postura = postura(this, estado.ANDADADO_D_COSTAS);
-            if (olhos[1] > this.sprites.posY) {
-                this.postura = postura(this, estado.ANDANDO_D_FRENTE);
+    andar(direcao, v) {
+        ANDAR_PARAMS.forEach((ap) => {
+            if (ap[0] == direcao) {
+                this.postura = postura(this, ap[1]);
+                if (ap[0] == 'c' || ap[0] == 'b') {
+                    this.sprites.posY += (v * ap[2]);
+                }
+                if (ap[0] == 'e' || ap[0] == 'd') {
+                    this.sprites.posX += (v * ap[2]);
+                }
             }
-            this.sprites.posY -= v;
-        }
-        if (direcao == 'b') {
-            this.postura = postura(this, estado.ANDANDO_D_FRENTE);
-            if (olhos[1] < this.sprites.posY) {
-                this.postura = postura(this, estado.ANDADADO_D_COSTAS);
-            }
-            this.sprites.posY += v;
-        }
-        if (direcao == 'e') {
-            this.postura = postura(this, estado.ANDANDO_D_ESQUERDA);
-            if (olhos[0] > this.sprites.posX) {
-                this.postura = postura(this, estado.ANDANDO_D_DIREITA);
-            }
-            this.sprites.posX -= v;
-        }
-        if (direcao == 'd') {
-            this.postura = postura(this, estado.ANDANDO_D_DIREITA);
-            if (olhos[0] < this.sprites.posX) {
-                this.postura = postura(this, estado.ANDANDO_D_ESQUERDA);
-            }
-            this.sprites.posX += v;
-        }
+        });
         this.sprites.quadroInicial = 1;
         this.sprites.quadroFinal = 2;
         this.sprites.update(this.sprites.quadroInicial, this.sprites.quadroFinal);

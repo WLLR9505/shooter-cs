@@ -32,25 +32,25 @@ function checkControls(controlMode, x, y, player) {
         player.recarregarArma();
     }
     if (controlMode.up) {
-        player.andar('c', [x, y], v);
+        player.andar('c', v);
     }
     else {
         player.postura = postura(player, estado.PARADO_D);
     }
     if (controlMode.down) {
-        player.andar('b', [x, y], v);
+        player.andar('b', v);
     }
     else {
         player.postura = postura(player, estado.PARADO_D);
     }
     if (controlMode.left) {
-        player.andar('e', [x, y], v);
+        player.andar('e', v);
     }
     else {
         player.postura = postura(player, estado.PARADO_D);
     }
     if (controlMode.right) {
-        player.andar('d', [x, y], v);
+        player.andar('d', v);
     }
     else {
         player.postura = postura(player, estado.PARADO_D);

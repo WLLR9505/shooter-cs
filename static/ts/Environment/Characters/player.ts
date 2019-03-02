@@ -12,7 +12,9 @@ class Player extends Personagem {
     agir (modo, X, Y) { // 1 : primario 2 : secundario
         switch (modo) {
             case 1:
-                this.corpo.maoD.atirar(X, Y);
+                if (this.corpo.maoD != null) {
+                    this.corpo.maoD.atirar(X, Y);
+                }
                 break;
             case 2:
 				try {

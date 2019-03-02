@@ -13,6 +13,13 @@ enum estado {
 	ANDANDO_D_DIREITA
 }
 
+const ANDAR_PARAMS : any[] = [
+	['c', estado.ANDADADO_D_COSTAS, -1],	//[direção / estado do sprite / fator velocidade]
+	['b', estado.ANDANDO_A_FRENTE, 1],
+	['e', estado.ANDANDO_D_ESQUERDA, -1],
+	['d', estado.ANDANDO_A_DIREITA, 1]
+];
+
 const USAVEIS : string[] = [ 'MOCHILA', 'MUNICAO' ] ;	//lista de objetos usaveis
 
 interface Corpo {
@@ -119,39 +126,20 @@ class Personagem {
 			}
 		}
 	}
-	andar(direcao, olhos = [2], v) {
-        if (direcao == 'c') {
-            this.postura = postura(this, estado.ANDADADO_D_COSTAS);
-            if (olhos[1] > this.sprites.posY) {
-                //anda para cima olhando para baixo
-                this.postura = postura(this, estado.ANDANDO_D_FRENTE);
-            }
-            this.sprites.posY -= v;
-        }
-        if (direcao == 'b') {
-            this.postura = postura(this, estado.ANDANDO_D_FRENTE);
-            if (olhos[1] < this.sprites.posY) {
-                //anda para baixo olhando para cima
-                this.postura = postura(this, estado.ANDADADO_D_COSTAS);
-            }
-            this.sprites.posY += v;
-        }
-        if (direcao == 'e') {
-            this.postura = postura(this, estado.ANDANDO_D_ESQUERDA);
-            if (olhos[0] > this.sprites.posX) {
-                //anda para esquerda olhando para direita
-                this.postura = postura(this, estado.ANDANDO_D_DIREITA);
-            }
-            this.sprites.posX -= v;
-        }
-        if (direcao == 'd') {
-            this.postura = postura(this, estado.ANDANDO_D_DIREITA);
-            if (olhos[0] < this.sprites.posX) {
-                this.postura = postura(this, estado.ANDANDO_D_ESQUERDA);
-                //anda para direita olhando para esquerda
-            }
-            this.sprites.posX += v;
-        }
+	andar(direcao, v) {
+		ANDAR_PARAMS.forEach((ap) => {
+			if (ap[0] == direcao) {
+				this.postura = postura(this, ap[1]);	//atribui a postura de acordo com a direção
+
+				//utiliza o fator de velocidade negativo ou positivo dependendo dad direção
+				if (ap[0] == 'c' || ap[0] == 'b') {
+					this.sprites.posY += (v * ap[2]);
+				}
+				if (ap[0] == 'e' || ap[0] == 'd') {
+					this.sprites.posX += (v * ap[2]);
+				}
+			}
+		})
 
         //quadros de movimento
         this.sprites.quadroInicial = 1;

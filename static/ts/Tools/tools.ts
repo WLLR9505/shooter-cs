@@ -1,4 +1,23 @@
 //funções úteis
+
+function Quadrant(obj1 = [2], obj2 = [2]) {
+    //retorna em qual quadrante está o obj1 em relação ao obj2
+    //0|1
+    //3|2
+
+    if (obj1[0] < obj2[0]) {    //esquerda
+        if (obj1[1] < obj2[1])
+            return 0 //cima
+        else
+            return 3 //baixo
+    } else {    //direita
+        if (obj1[1] < obj2[1])
+            return 1 //cima
+        else
+            return 2 //baixo
+    }
+}
+
 function CopyObj (source) {
     return Object.assign({}, source);
 }
@@ -32,4 +51,3 @@ function Repeat(times : number, callback) {
     }
 }
 
-export { DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat}

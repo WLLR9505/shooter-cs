@@ -1,7 +1,5 @@
-import { Sprites, I_sprites } from '../../Engine/sprites.js';
-import { DistAB } from '../../Tools/tools.js';
+import { DistAB, Quadrant } from '../../Tools/tools.js';
 import { postura, estado, Personagem } from './character.js';
-import { mouseX, mouseY } from '../../Controls/MAK.js';
 import { drawArma } from '../Equipment/weapons.js';
 import { CONTEXT } from '../../Engine/canvas.js';
 
@@ -44,6 +42,13 @@ interface Cerebro {
 	matar : boolean;
 	Mirar : Foco;
 };
+
+const ALVO_PARAMS : any[] = [
+	['e', -50, 0, 3],	//[direção/ distância para agir/ coordenada / coordenada] // NOTE: coordenada representa a direção retornada por Quadrant()
+	['d', 50, 1, 2],
+	['c', -50, 0, 1],
+	['b', 50, 3, 2]
+]
 
 class Bot extends Personagem {
 	cerebro : Cerebro;
@@ -136,27 +141,16 @@ class Bot extends Personagem {
 		return true;
     }
     IA_seguir(alvo) {
-        if (this.sprites.posX - 50 >= alvo.sprites.posX) {	//está a esquerda
-            this.andar('e', [mouseX, mouseY], 3)
-        } else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
-        if (this.sprites.posX + 50 <= alvo.sprites.posX) {	//está a direita
-            this.andar('d', [mouseX, mouseY], 3)
-        } else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
+		ALVO_PARAMS.forEach((ap) => {
+			let pos = Quadrant([alvo.sprites.posX, alvo.sprites.posY], [this.sprites.posX, this.sprites.posY]);
+			//pos contém o quadrante em que está o alvo (0 ou 3 = esquerda, 1 ou 2 = direita, 0 ou 1 = cima, 3 ou 2 = baixo)
 
-        if (this.sprites.posY -50 >= alvo.sprites.posY) {	//está abaixo
-            this.andar('c', [mouseX, mouseY], 3)
-        } else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
-        if (this.sprites.posY + 50 <= alvo.sprites.posY) {	//está acima
-            this.andar('b', [mouseX, mouseY], 3)
-        } else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
+			if(pos == ap[2] || pos == ap[3]) {	//usa os dois últimos parametros da tupla para decidir em qual direção andar
+				this.andar(ap[0], 3)
+			} else {
+				this.postura = postura(this, estado.PARADO_D);
+			}
+		});
     }
 	IA_mirar(player) {
 		this.cerebro.Mirar.alvo.x = player.sprites.posX;

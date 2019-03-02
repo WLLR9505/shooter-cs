@@ -1,3 +1,17 @@
+function Quadrant(obj1 = [2], obj2 = [2]) {
+    if (obj1[0] < obj2[0]) {
+        if (obj1[1] < obj2[1])
+            return 0;
+        else
+            return 3;
+    }
+    else {
+        if (obj1[1] < obj2[1])
+            return 1;
+        else
+            return 2;
+    }
+}
 function CopyObj(source) {
     return Object.assign({}, source);
 }
@@ -26,5 +40,5 @@ function Repeat(times, callback) {
         times--;
     }
 }
-export { DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat };
+export { DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat, Quadrant };
 //# sourceMappingURL=tools.js.map

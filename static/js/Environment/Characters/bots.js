@@ -1,6 +1,5 @@
-import { DistAB } from '../../Tools/tools.js';
+import { DistAB, Quadrant } from '../../Tools/tools.js';
 import { postura, estado, Personagem } from './character.js';
-import { mouseX, mouseY } from '../../Controls/MAK.js';
 import { drawArma } from '../Equipment/weapons.js';
 import { CONTEXT } from '../../Engine/canvas.js';
 var corpoNULL = {
@@ -22,6 +21,12 @@ var cerebroNULL = {
 ;
 ;
 ;
+const ALVO_PARAMS = [
+    ['e', -50, 0, 3],
+    ['d', 50, 1, 2],
+    ['c', -50, 0, 1],
+    ['b', 50, 3, 2]
+];
 class Bot extends Personagem {
     constructor(nome, velocidade, energia, vida = [2], spriteParams) {
         super(nome, velocidade, energia, vida, spriteParams);
@@ -100,30 +105,15 @@ class Bot extends Personagem {
         return true;
     }
     IA_seguir(alvo) {
-        if (this.sprites.posX - 50 >= alvo.sprites.posX) {
-            this.andar('e', [mouseX, mouseY], 3);
-        }
-        else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
-        if (this.sprites.posX + 50 <= alvo.sprites.posX) {
-            this.andar('d', [mouseX, mouseY], 3);
-        }
-        else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
-        if (this.sprites.posY - 50 >= alvo.sprites.posY) {
-            this.andar('c', [mouseX, mouseY], 3);
-        }
-        else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
-        if (this.sprites.posY + 50 <= alvo.sprites.posY) {
-            this.andar('b', [mouseX, mouseY], 3);
-        }
-        else {
-            this.postura = postura(this, estado.PARADO_D);
-        }
+        ALVO_PARAMS.forEach((ap) => {
+            let pos = Quadrant([alvo.sprites.posX, alvo.sprites.posY], [this.sprites.posX, this.sprites.posY]);
+            if (pos == ap[2] || pos == ap[3]) {
+                this.andar(ap[0], 3);
+            }
+            else {
+                this.postura = postura(this, estado.PARADO_D);
+            }
+        });
     }
     IA_mirar(player) {
         this.cerebro.Mirar.alvo.x = player.sprites.posX;
