@@ -52,6 +52,8 @@ function checkControls(controlMode : ControlsInterface, x, y, player : Player) {
 
     if (controlMode.reload) { //Recarregar
         player.recarregarArma();
+    } else {    //quando soltar o botão está pronto para recarregar
+        player.prontoRecarregar();
     }
 
     if (controlMode.up) { //Cima

@@ -58,6 +58,7 @@ class Arma {
     img: HTMLImageElement;
     anatomia: I_anatomia;
     tipo: any;
+    readyReload: boolean;
     constructor(nome, pente, alcance, precisao, velocidadeTiro, taxaTiros, nAttachment, imgNome, anatomia, categoria, tipo?) {
         this.nome = nome;
         this.pente = pente;
@@ -72,6 +73,7 @@ class Arma {
         this.anatomia = anatomia;
         this.categoria = categoria;
         this.tipo = tipo || null;   //caso possa ser usada como anexo
+        this.readyReload = true;
     }
     atirar(X : number, Y : number) {
         if (this.pente[0] > 0) {    //se o pente atual tiver balas
@@ -92,7 +94,11 @@ class Arma {
         }
     }
     recarregar(pente: number) {
+        if (this.readyReload == false) {
+            return false;
+        }
         this.pente[0] += pente;
+        this.readyReload = false;
     }
     ConectarAnexo(attachment) {
         switch (attachment.tipo) {

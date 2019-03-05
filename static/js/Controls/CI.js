@@ -31,6 +31,9 @@ function checkControls(controlMode, x, y, player) {
     if (controlMode.reload) {
         player.recarregarArma();
     }
+    else {
+        player.prontoRecarregar();
+    }
     if (controlMode.up) {
         player.andar('c', v);
     }

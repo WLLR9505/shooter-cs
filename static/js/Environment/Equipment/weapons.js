@@ -35,6 +35,7 @@ class Arma {
         this.anatomia = anatomia;
         this.categoria = categoria;
         this.tipo = tipo || null;
+        this.readyReload = true;
     }
     atirar(X, Y) {
         if (this.pente[0] > 0) {
@@ -56,7 +57,11 @@ class Arma {
         }
     }
     recarregar(pente) {
+        if (this.readyReload == false) {
+            return false;
+        }
         this.pente[0] += pente;
+        this.readyReload = false;
     }
     ConectarAnexo(attachment) {
         switch (attachment.tipo) {

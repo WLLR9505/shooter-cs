@@ -47,6 +47,7 @@ class Personagem {
     vida: number[];
 	sprites: I_sprites;
 	postura: number;
+	readyReload : boolean;
     constructor (nome, velocidade, energia, vida = [ 2 ], spriteParams) {
         this.nome = nome;
         this.velocidade = velocidade;
@@ -55,6 +56,7 @@ class Personagem {
 		this.corpo =  corpoNULL;
         this.sprites = Sprites(spriteParams);
         this.postura = 5;    //parado desarmado
+		this.readyReload = true;
     }
     spawn (x, y) {
         this.sprites.render(x, y);
@@ -93,6 +95,9 @@ class Personagem {
 			console.log('não tem inventário');
 		}
 	}
+	prontoRecarregar(arma = this.corpo.maoD) {
+		arma.readyReload = true;
+	}
 	recarregarArma(arma = this.corpo.maoD) {
 		let pente : number = 0;
 		if (arma.pente[0] ==  arma.pente[2]) {
@@ -100,6 +105,9 @@ class Personagem {
 			return true;
 		}
 		if (this.corpo.costas == null) {
+			return false;
+		}
+		if (arma.readyReload == false) {	//se arma não estiver pronta para recarregar
 			return false;
 		}
 		for (let i = 0; i < this.corpo.costas.slot.length; i++) {

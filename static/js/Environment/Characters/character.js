@@ -36,6 +36,7 @@ class Personagem {
         this.corpo = corpoNULL;
         this.sprites = Sprites(spriteParams);
         this.postura = 5;
+        this.readyReload = true;
     }
     spawn(x, y) {
         this.sprites.render(x, y);
@@ -73,12 +74,18 @@ class Personagem {
             console.log('não tem inventário');
         }
     }
+    prontoRecarregar(arma = this.corpo.maoD) {
+        arma.readyReload = true;
+    }
     recarregarArma(arma = this.corpo.maoD) {
         let pente = 0;
         if (arma.pente[0] == arma.pente[2]) {
             return true;
         }
         if (this.corpo.costas == null) {
+            return false;
+        }
+        if (arma.readyReload == false) {
             return false;
         }
         for (let i = 0; i < this.corpo.costas.slot.length; i++) {
