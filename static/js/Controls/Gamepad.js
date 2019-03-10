@@ -21,6 +21,7 @@ function gamepadCheck(control) {
     gp = gamepads[0];
     control.run = buttonPressed(gp.buttons[4]);
     control.reload = buttonPressed(gp.buttons[5]);
+    control.take = buttonPressed(gp.buttons[3]);
     control.primaryAction = buttonPressed(gp.buttons[7]);
     control.secondaryAction = buttonPressed(gp.buttons[6]);
     if (gp.axes[0] > 0.5) {

@@ -30,7 +30,8 @@ function checkKeys (control : ControlsInterface) {
     control.run = keyPressList[16]; //Shift L
 
     control.reload = keyPressList[82]; //R
-
+    control.take = keyPressList[69]; //E
+    
     control.left = keyPressList[65]; //A
     control.right = keyPressList[68]; //D
     control.down = keyPressList[83]; //S

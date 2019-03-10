@@ -1,3 +1,12 @@
+function Proximity(mainXY = [2], obj = [], tolerance) {
+    let objReturn = null;
+    obj.forEach((o) => {
+        if (DistAB(mainXY, [o.sprite.posX, o.sprite.posY]) < tolerance) {
+            objReturn = o;
+        }
+    });
+    return objReturn;
+}
 function Quadrant(obj1 = [2], obj2 = [2]) {
     if (obj1[0] < obj2[0]) {
         if (obj1[1] < obj2[1])
@@ -40,5 +49,5 @@ function Repeat(times, callback) {
         times--;
     }
 }
-export { DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat, Quadrant };
+export { Proximity, DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat, Quadrant };
 //# sourceMappingURL=tools.js.map

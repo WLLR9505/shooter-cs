@@ -2,6 +2,8 @@ import { estado, postura } from "../Environment/Characters/character.js";
 import { Player } from "../Environment/Characters/player.js";
 import { checkKeys } from "./MAK.js";
 import { checkPads } from "./Gamepad.js";
+import { Proximity, RemoveFromArray } from "../Tools/tools.js";
+import { itens, excluirItem } from "../Environment/tobi.js";
 
 let v = 3;
 class ControlsInterface {
@@ -11,6 +13,7 @@ class ControlsInterface {
     right: boolean;
     run: boolean;
     reload: boolean;
+    take: boolean;
     primaryAction: boolean;
     secondaryAction: boolean;
     x : number;
@@ -25,6 +28,7 @@ class ControlsInterface {
 
         this.run = false;
         this.reload = false;
+        this.take = false;
 
         this.primaryAction = false;
         this.secondaryAction = false;
@@ -54,6 +58,12 @@ function checkControls(controlMode : ControlsInterface, x, y, player : Player) {
         player.recarregarArma();
     } else {    //quando soltar o botão está pronto para recarregar
         player.prontoRecarregar();
+    }
+
+    if (controlMode.take) { //Pegar
+        let o = Proximity([player.sprites.posX, player.sprites.posY], itens, 100);   //se estiver perto armazena e 'o'
+        player.usar(o); //tenta usar o item 'o' (guardar ou equipar [munição ou mochila])
+        excluirItem(o)  //remove o item de ser renderizado
     }
 
     if (controlMode.up) { //Cima

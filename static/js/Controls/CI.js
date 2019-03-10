@@ -1,6 +1,8 @@
 import { estado, postura } from "../Environment/Characters/character.js";
 import { checkKeys } from "./MAK.js";
 import { checkPads } from "./Gamepad.js";
+import { Proximity } from "../Tools/tools.js";
+import { itens, excluirItem } from "../Environment/tobi.js";
 let v = 3;
 class ControlsInterface {
     constructor(mode) {
@@ -10,6 +12,7 @@ class ControlsInterface {
         this.right = false;
         this.run = false;
         this.reload = false;
+        this.take = false;
         this.primaryAction = false;
         this.secondaryAction = false;
         this.x = 0;
@@ -33,6 +36,11 @@ function checkControls(controlMode, x, y, player) {
     }
     else {
         player.prontoRecarregar();
+    }
+    if (controlMode.take) {
+        let o = Proximity([player.sprites.posX, player.sprites.posY], itens, 100);
+        player.usar(o);
+        excluirItem(o);
     }
     if (controlMode.up) {
         player.andar('c', v);

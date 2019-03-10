@@ -1,5 +1,6 @@
 import { Sprites } from "../Engine/sprites.js";
 import { CONTEXT } from "../Engine/canvas.js";
+import { incluirTOBI } from "./tobi.js";
 var MESA = new Image();
 MESA.src = './resources/Objects/mesa.png';
 var mesa = Sprites({
@@ -19,6 +20,6 @@ var mesa2 = Sprites({
     posY: 300
 });
 export function loadObjects(objColisao) {
-    objColisao.push(mesa, mesa2);
+    incluirTOBI(objColisao, [mesa, mesa2]);
 }
 //# sourceMappingURL=objects.js.map

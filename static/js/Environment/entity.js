@@ -1,6 +1,6 @@
 import { Bot } from "./Characters/bots.js";
 import { CONTEXT } from "../Engine/canvas.js";
-import { FMB, SMMB, atc_miraTatica, mochila_B, municao_FUZIL, municao_SUB, municao_SHOTGUN, fuzil1, shotgunLonga, mochila_A, mochila_C } from "./items.js";
+import { FMB, SMMB, atc_miraTatica, mochila_B, municao_FUZIL, municao_SHOTGUN, fuzil1, shotgunLonga, mochila_C } from "./items.js";
 import { CopyObj } from "../Tools/tools.js";
 import { Player } from "./Characters/player.js";
 const MILITAR_SHEET = new Image();
@@ -50,11 +50,7 @@ function loadEntities(bots) {
     testArma.ConectarAnexo(SMMB);
     testArma.ConectarAnexo(atc_miraTatica);
     player.equipar(testArma);
-    player.usar(mochila_B);
-    player.guardar(CopyObj(municao_FUZIL));
-    player.guardar(CopyObj(municao_SUB));
-    player.guardar(CopyObj(municao_SHOTGUN));
-    bot_militar_1.usar(mochila_A);
+    bot_militar_1.usar(mochila_B);
     bot_militar_1.guardar(CopyObj(municao_SHOTGUN));
     bot_militar_1.equipar(shotgunLonga);
     bot_militar_2.usar(mochila_C);

@@ -1,5 +1,16 @@
 //funções úteis
 
+function Proximity (mainXY = [2] , obj = [], tolerance) {
+    //retorna o objeto que está perto
+    let objReturn = null;
+    obj.forEach((o) => {
+        if (DistAB(mainXY, [o.sprite.posX, o.sprite.posY]) < tolerance) {
+            objReturn = o;
+        }
+    });
+    return objReturn;
+}
+
 function Quadrant(obj1 = [2], obj2 = [2]) {
     //retorna em qual quadrante está o obj1 em relação ao obj2
     //0|1
@@ -51,3 +62,4 @@ function Repeat(times : number, callback) {
     }
 }
 
+export { Proximity, DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat, Quadrant}

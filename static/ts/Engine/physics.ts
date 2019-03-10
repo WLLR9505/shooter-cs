@@ -1,5 +1,5 @@
 import { tirosNoAr, objColisao } from '../main.js';
-import { itens } from '../Environment/items.js';
+import { itens } from '../Environment/tobi.js';
 
 function block (obj1, obj2) {
     //se inverter a ordem so parametros = empurrar

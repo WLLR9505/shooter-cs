@@ -1,5 +1,6 @@
 import { Sprites } from "../Engine/sprites.js";
 import { CONTEXT } from "../Engine/canvas.js";
+import { incluirTOBI } from "./tobi.js";
 
 var MESA = new Image();
 MESA.src = './resources/Objects/mesa.png';
@@ -24,5 +25,5 @@ var mesa2 = Sprites(
 
 
 export function loadObjects(objColisao) {
-    objColisao.push(mesa, mesa2);
+    incluirTOBI(objColisao, [mesa, mesa2])
 }

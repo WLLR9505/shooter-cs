@@ -9,9 +9,10 @@ import { statusMunicao, updateTiro } from "./Environment/Equipment/weapons.js";
 import { RemoveFromArray, DistAB } from "./Tools/tools.js";
 import { devInfo, inspect, drawArea, circleArea, drawDistPLayerAim } from "./Tools/devTools.js";
 import { loadObjects } from "./Environment/objects.js";
-import { itens } from "./Environment/items.js";
+import { loadItens } from "./Environment/items.js";
 import { checkControls, loadControls } from "./Controls/CI.js";
 import { loadJSON } from "./Tools/jsonLoader.js";
+import { itens } from "./Environment/tobi.js";
 
 var FPS;
 var intervalTime;
@@ -46,6 +47,7 @@ function canvasApp () {
 
             loadEntities(bots);
             loadObjects(objColisao);
+            loadItens();
             console.log('Configurações carregadas com sucesso!');
             gameLoop();
         });

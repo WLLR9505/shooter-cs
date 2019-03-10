@@ -5,6 +5,7 @@ import { Municao } from './Equipment/bullets.js';
 import { CONTEXT } from '../Engine/canvas.js';
 import { Arma } from './Equipment/weapons.js';
 import { Shotgun } from './Equipment/Weapons/shotgun.js';
+import { incluirTOBI, itens } from './tobi.js';
 const CATEGORIA_PISTOLA = 0;
 const CATEGORIA_SHOTGUN = 1;
 const CATEGORIA_SUB = 2;
@@ -17,7 +18,6 @@ var tipo_Anexo;
     tipo_Anexo[tipo_Anexo["CANO"] = 2] = "CANO";
     tipo_Anexo[tipo_Anexo["ESPECIAL"] = 3] = "ESPECIAL";
 })(tipo_Anexo || (tipo_Anexo = {}));
-var itens = new Array(0);
 var pistola = new Arma('P1', [0, 0, 10], 200, 2, 5.5, 10, 2, 'Pistols/pistola_1.png', {
     pArma: [0, 0],
     pMao: [4, 9],
@@ -171,6 +171,8 @@ var municao_SUB = new Municao(90, 'MUNICAO', CATEGORIA_SUB, Sprites({
     posX: 256,
     posY: 209
 }));
-itens.push(mochila_C, municao_FUZIL, municao_SUB);
-export { pistola, fuzil1, shotgunCurta, shotgunLonga, FMA, SMMA, FMB, SMMB, atc_miraComum, atc_miraTatica, atc_luneta2, atc_luneta4, atc_luneta8, mochila_A, mochila_B, mochila_C, municao_PISTOLA, municao_SUB, municao_SHOTGUN, municao_FUZIL, municao_SNIPER, itens };
+function loadItens() {
+    incluirTOBI(itens, [mochila_A, municao_FUZIL, municao_SUB]);
+}
+export { pistola, fuzil1, shotgunCurta, shotgunLonga, FMA, SMMA, FMB, SMMB, atc_miraComum, atc_miraTatica, atc_luneta2, atc_luneta4, atc_luneta8, mochila_A, mochila_B, mochila_C, municao_PISTOLA, municao_SUB, municao_SHOTGUN, municao_FUZIL, municao_SNIPER, loadItens };
 //# sourceMappingURL=items.js.map

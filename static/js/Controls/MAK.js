@@ -21,6 +21,7 @@ document.onkeyup = function (e) {
 function checkKeys(control) {
     control.run = keyPressList[16];
     control.reload = keyPressList[82];
+    control.take = keyPressList[69];
     control.left = keyPressList[65];
     control.right = keyPressList[68];
     control.down = keyPressList[83];

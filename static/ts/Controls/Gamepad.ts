@@ -26,6 +26,7 @@ function gamepadCheck (control : ControlsInterface) {
 
     control.run = buttonPressed(gp.buttons[4])  //correr    - LB
     control.reload = buttonPressed(gp.buttons[5])  //recarregar    - RB
+    control.take = buttonPressed(gp.buttons[3])  //pegar    - Y
 
     control.primaryAction = buttonPressed(gp.buttons[7])  //Ação Primária     - RT
     control.secondaryAction = buttonPressed(gp.buttons[6])  //Ação Secundária   - LT

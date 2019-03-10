@@ -1,5 +1,5 @@
 import { tirosNoAr, objColisao } from '../main.js';
-import { itens } from '../Environment/items.js';
+import { itens } from '../Environment/tobi.js';
 function block(obj1, obj2) {
     if (obj1 == undefined || obj2 == undefined) {
         console.log('obj1 ou obj2 indefinidos');
