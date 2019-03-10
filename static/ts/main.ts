@@ -6,7 +6,7 @@ import { mapaTeste } from "./Environment/map.js";
 import { checkCollision, bulletCollision } from "./Engine/physics.js";
 import { THECANVAS, CONTEXT } from "./Engine/canvas.js";
 import { statusMunicao, updateTiro } from "./Environment/Equipment/weapons.js";
-import { RemoveFromArray, DistAB } from "./Tools/tools.js";
+import { RemoveFromArray, DistAB, ClearConsoleEvery } from "./Tools/tools.js";
 import { devInfo, inspect, drawArea, circleArea, drawDistPLayerAim } from "./Tools/devTools.js";
 import { loadObjects } from "./Environment/objects.js";
 import { loadItens } from "./Environment/items.js";
@@ -55,6 +55,7 @@ function canvasApp () {
 }
 
 function gameLoop () {
+    ClearConsoleEvery(30); //limpa o console
     checkControls(CONTROLS, CONTROLS.x, CONTROLS.y, player);
     drawScreen();         //atualiza os quadros
 

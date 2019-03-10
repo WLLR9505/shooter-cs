@@ -55,6 +55,15 @@ function DistAB(A = [2], B = [2]) {
     return Math.sqrt( Math.pow( (B[0] - A[0]) , 2) + Math.pow( (B[1] - A[1]) , 2) )
 }
 
+function ClearConsoleEvery(seconds : number) {
+    //limpa o console a cada x segundos
+    let globalDate = new Date;
+    let globalSeconds = globalDate.getSeconds();
+    if (globalSeconds % seconds == 0) {
+        console.clear()
+    }
+}
+
 function Repeat(times : number, callback) {
     while(times > 0) {
         callback()
@@ -62,4 +71,4 @@ function Repeat(times : number, callback) {
     }
 }
 
-export { Proximity, DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat, Quadrant}
+export { Proximity, DistAB, MoveValue, RemoveFromArray, RandomNumber, CopyObj, Repeat, Quadrant, ClearConsoleEvery}
