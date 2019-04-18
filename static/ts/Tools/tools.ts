@@ -57,7 +57,7 @@ function DistAB(A = [2], B = [2]) {
 
 function ClearConsoleEvery(seconds : number) {
     //limpa o console a cada x segundos
-    let globalDate = new Date;
+    let globalDate = new Date();
     let globalSeconds = globalDate.getSeconds();
     if (globalSeconds % seconds == 0) {
         console.clear()
